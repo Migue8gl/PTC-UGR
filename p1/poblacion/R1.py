@@ -11,9 +11,6 @@ Script R1: Calcular la variación de la población por provincias desde el año 
 2017 en términos absolutos y relativos.
 """
 
-
-
-
 import csv
 def ejecutar():
 
@@ -26,6 +23,11 @@ def ejecutar():
     primero = cadena_inicial.find('Total Nacional')
     ultimo = cadena_inicial.find('Notas')
     cadena_final = cadena_inicial[primero:ultimo]
+    
+    # Limpiamos el último caracter ';' que es innecesario
+    lines = cadena_final.split('\n')
+    cleaned_lines = [line.rstrip(';') for line in lines] # Cogemos último ';'
+    cadena_final = '\n'.join(cleaned_lines)
 
     # Creamos cabecera y se la añadimos al fichero csv final
     cabecera = "Provincia;2017;2016;2015;2014;2013;2012;2011;2010;H2017;H2016;H2015;H2014;H2013;H2012;H2011;H2010;M2017;M2016;M2015;M2014;M2013;M2012;M2011;M2010"
@@ -42,5 +44,4 @@ def ejecutar():
         for regD in poblacionDict:
             print(regD)
 
-        print(poblacionDict.fieldnames)
 ejecutar()
