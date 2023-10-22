@@ -80,14 +80,14 @@ def ejecutar():
             cadena_html += '<tr><th scope="row">' + dict['Provincia'] + '</th>'
 
             for año in range(2017, 2010, -1):
-                varAbs = (float(dict[str(año)]) /
-                          float(dict[str(año-1)])) * 100
+                varAbs = float(dict[str(año)]) - float(dict[str(año-1)])
                 varAbs = funciones.redondear_numero(varAbs, 2)
                 cadena_html += '<td>' + \
                     funciones.separador_miles(varAbs) + '</td>'
 
             for año in range(2017, 2010, -1):
-                varRel = float(dict[str(año)]) - float(dict[str(año-1)])
+                varAbs = float(dict[str(año)]) - float(dict[str(año-1)])
+                varRel = (varAbs / float(dict[str(año-1)]))*100
                 varRel = funciones.redondear_numero(varRel, 2)
                 cadena_html += '<td>' + \
                     funciones.separador_miles(varRel) + '</td>'
