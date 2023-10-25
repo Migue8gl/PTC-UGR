@@ -1,0 +1,36 @@
+body {
+	background-image: url("imagenFondo.jpg");
+	background-color: #E0FFFF;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+p.headersL {
+	margin: 15px;
+	display: inline;
+	float: left
+}
+
+p.headersR {
+	margin: 15px;
+	display: inline;
+	float: right
+}
+
+.custom-image {
+	height: 100px;
+	width: 100px;
+	border: 3px solid black;
+}
+
+.destacado {
+	font-weight: bold;
+	color: red;
+}
+
+#titulo {
+	font-size: 40px;
+	font-weight: bold;
+	text-align: center;
+	color: blue;
+}
