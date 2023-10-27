@@ -61,7 +61,7 @@ def traspuesta(lista_matriz):
 
 # Usamos comprensión de litas y zip(*a) = zip(a[0], a[1], ...)
 def traspuesta_v2(lista_matriz):
-    return [list(row) for row in zip(*lista_matriz)]
+    return [list(column) for column in zip(*lista_matriz)]
 
 
 n = int(input('Introduce un número N de listas: '))
