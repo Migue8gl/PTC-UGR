@@ -14,7 +14,6 @@ comunidad autónoma.
 
 
 
-from lxml import html
 import funciones
 import csv
 import matplotlib.pyplot as plt
