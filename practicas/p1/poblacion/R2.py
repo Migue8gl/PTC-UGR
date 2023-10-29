@@ -118,7 +118,6 @@ def ejecutar():
 
         cadena_html += '</tbody></table></body></html>'
 
-        print(poblacion_total_ccaa)
         file_table.write(cadena_html)
         file_table.close()
 
