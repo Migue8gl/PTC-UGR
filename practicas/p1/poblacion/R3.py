@@ -59,8 +59,6 @@ def ejecutar():
     cadena_html = ''
     with open('./resultados/poblacionComAutonomas.html', 'r') as file:
         file_table = file.read()
-        
-        print(file_table)
 
         # Quitamos las etiquetas de cierre html
         cadena_html = file_table.replace('</body></html>', '')
