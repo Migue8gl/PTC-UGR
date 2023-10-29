@@ -45,7 +45,8 @@ def limpiar_csv_poblaciones(csv_nombre):
         encoding='utf8')
     fichero_final.write(cabecera + '\n' + cadena_final)
     fichero_final.close()
-    
+
+
 def get_ca_provincias():
     # Creamos un diccionario en el que meteremos las comunidades autónomas como
     # clave y una lista de provincias asociadas

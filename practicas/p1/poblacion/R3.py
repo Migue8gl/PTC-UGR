@@ -69,7 +69,6 @@ def get_media_poblacional():
 
 
 def get_grafico(poblaciones_comunidades):
-    print(poblaciones_comunidades)
     # Ordenamos las comunidades autónomas de más población total a menos
     poblaciones_comunidades_sorted = sorted(
         poblaciones_comunidades,
@@ -78,8 +77,6 @@ def get_grafico(poblaciones_comunidades):
         ),
         reverse=True
     )
-
-    print(poblaciones_comunidades_sorted)
 
     plt.figure("barras", figsize=(15, 14))
     plt.title('Población por sexo en el año 2017 (CCAA)')
@@ -121,7 +118,6 @@ def ejecutar():
             '<img src="../resultados/grafico.jpg" style="display: block; margin: 0 auto;">', '')
         cadena_html += '<img src="../resultados/grafico.jpg" style="display: block; margin: 0 auto;">'
         cadena_html += '</body></html>'
-        print(file_table)
     with open('./resultados/poblacionComAutonomas.html', 'w') as file:
         file.write(cadena_html)
 
