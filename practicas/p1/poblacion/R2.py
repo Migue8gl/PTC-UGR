@@ -16,26 +16,9 @@ autónoma en cada año de 2010 a 2017, en total y desagregado por sexos
 
 import csv
 import funciones
-from lxml import html
 def ejecutar():
-    # Creamos un diccionario en el que meteremos las comunidades autónomas como
-    # clave y una lista de provincias asociadas
-    comunidades_dict = {}
-
-    # Leemos del fichero html
-    comunidades_fich = open(
-        './entradas/comunidadAutonoma-Provincia.htm', 'r', encoding="utf8")
-    com_string = comunidades_fich.read()
-
-    # Creamos el objeto tree para analizar el documento HTML como cadenas
-    tree = html.fromstring(com_string)
-
-    celdas = tree.xpath('//td/text()')
-
-    for index in range(1, len(celdas), 4):
-        comunidad_autonoma = celdas[index - 1] + ' ' + celdas[index]
-        provincia = celdas[index + 1] + ' ' + celdas[index + 2]
-        comunidades_dict[provincia] = comunidad_autonoma
+    # Obtenemos datos de provincias asociadas a una comunidad autónoma
+    comunidades_dict = funciones.get_ca_provincias()
 
     #-------------------------------------------------------------------------#
 
@@ -79,28 +62,12 @@ def ejecutar():
                 cadena_html += '<th>' + campo + '</th>'
 
         # Creamos una lista de claves para almacenar el recuento de cada CA
-        claves = '2017;2016;2015;2014;2013;2012;2011;2010;H2017;H2016;H2015;H2014;H2013;H2012;H2011;H2010;M2017;M2016;M2015;M2014;M2013;M2012;M2011;M2010'.split(
-            ';')
+        claves = poblacion_dict.fieldnames.copy()
+        claves.remove('Provincia')
 
-        # Vamos rellenando la tabla con las comunidades autónomas y sumando
-        # los valores de cada provincia dentro de esta en total
-        poblacion_total_ccaa = {}
-        for dict in poblacion_dict:
-            prov = dict['Provincia']
-            # La primera fila nos la saltamos, no es una provincia
-            if prov != 'Total Nacional':
-                ca = comunidades_dict[prov]
-
-                # Sumar las poblaciones de la provincia a las poblaciones
-                # totales de la comunidad autónoma
-                for clave in dict:
-                    if clave != 'Provincia':
-                        if ca not in poblacion_total_ccaa:
-                            # Creamos diccionario con claves para cada año
-                            poblacion_total_ccaa[ca] = {
-                                clave: 0 for clave in claves}
-                        # Sumamos para obtener finalmente un total de población
-                        poblacion_total_ccaa[ca][clave] += float(dict[clave])
+        # Obtenemos el diccionario con los datos de cada ca
+        poblacion_total_ccaa = funciones.get_poblaciones_ccaa(
+            comunidades_dict, poblacion_dict)
 
         # Ordenamos por índice de Comunidad Autónoma
         poblacion_total_ccaa = {k: v for k, v in sorted(

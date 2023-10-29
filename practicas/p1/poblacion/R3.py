@@ -15,6 +15,8 @@ comunidad autónoma.
 
 
 from lxml import html
+import funciones
+import csv
 import matplotlib.pyplot as plt
 def get_media_poblacional():
     # Creamos un diccionario en el que meteremos las comunidades autónomas como
@@ -67,26 +69,25 @@ def get_media_poblacional():
 
 
 def get_grafico(poblaciones_comunidades):
-    # Ordenamos las comunidades autónomas con más población media
+    print(poblaciones_comunidades)
+    # Ordenamos las comunidades autónomas de más población total a menos
     poblaciones_comunidades_sorted = sorted(
         poblaciones_comunidades,
-        key=lambda x: (
-            sum(
-                int(poblaciones_comunidades[x]['PobHom'][y]) +
-                int(poblaciones_comunidades[x]['PobMuj'][y])
-                for y in poblaciones_comunidades[x]['PobHom']
-            )
+        key=lambda x: sum(
+            int(poblaciones_comunidades[x][str(y)]) for y in range(2017, 2009, -1)
         ),
         reverse=True
     )
+
+    print(poblaciones_comunidades_sorted)
 
     plt.figure("barras", figsize=(15, 14))
     plt.title('Población por sexo en el año 2017 (CCAA)')
     labels = []
     for index in range(10):
         ca = poblaciones_comunidades_sorted[index]
-        x_h = poblaciones_comunidades[ca]['PobHom']['2017']
-        x_m = poblaciones_comunidades[ca]['PobMuj']['2017']
+        x_h = poblaciones_comunidades[ca]['H2017']
+        x_m = poblaciones_comunidades[ca]['M2017']
         plt.bar(index - 0.1, x_h, color="b", width=0.25)
         plt.bar(index - 0.1 + 0.25, x_m, color="r", width=0.25)
         labels.append(''.join(
@@ -97,8 +98,14 @@ def get_grafico(poblaciones_comunidades):
 
 
 def ejecutar():
-    # Cogemos la información ya procesada del html obtenido en R2
-    poblaciones_comunidades = get_media_poblacional()
+    comunidades = funciones.get_ca_provincias()
+
+    datos_csv = open('./resultados/poblacionProvinciasHM2010-17-final.csv', 'r',
+                     encoding="utf8")
+    poblacion_dict = csv.DictReader(datos_csv, delimiter=';')
+    # Cogemos la información de las comunidades y el csv procesado
+    poblaciones_comunidades = funciones.get_poblaciones_ccaa(
+        comunidades, poblacion_dict)
     # Obtenemos el gráfico y lo guardamos
     get_grafico(poblaciones_comunidades)
 
