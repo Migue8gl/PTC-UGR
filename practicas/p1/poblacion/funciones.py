@@ -45,7 +45,8 @@ def limpiar_csv_poblaciones(csv_nombre):
 
 
 def obtener_ca_provincias():
-    # Creamos un diccionario en el que almacenaremos las comunidades autónomas como clave y una lista de provincias asociadas
+    # Creamos un diccionario en el que almacenaremos las comunidades autónomas 
+    # como clave y una lista de provincias asociadas
     comunidades_dict = {}
 
     # Leemos el archivo HTML de comunidades autónomas y provincias
@@ -77,7 +78,8 @@ def obtener_poblaciones_ccaa(comunidades, datos_csv):
         if provincia != 'Total Nacional':
             ca = comunidades[provincia]
 
-            # Sumar las poblaciones de la provincia a las poblaciones totales de la comunidad autónoma
+            # Sumar las poblaciones de la provincia a las poblaciones totales 
+            # de la comunidad autónoma
             for clave in registro:
                 if clave != 'Provincia':
                     if ca not in poblacion_total_ccaa:
