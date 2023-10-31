@@ -6,23 +6,7 @@ Por: migue8gl
 """
 
 import funciones
-import csv
 import matplotlib.pyplot as plt
-
-
-def cargar_y_procesar_datos():
-    # Obtenemos las comunidades autónomas y provincias
-    comunidades = funciones.obtener_ca_provincias()
-
-    #  Limpiar el CSV de provincias y darle un nuevo nombre
-    funciones.limpiar_csv_poblaciones('poblacionProvinciasHM2010-17-final.csv')
-    # Abrimos y procesamos el archivo CSV
-    datos_csv = open(
-        './resultados/poblacionProvinciasHM2010-17-final.csv', 'r', encoding="utf8")
-    poblacion_dict = csv.DictReader(datos_csv, delimiter=';')
-    poblaciones_comunidades = funciones.obtener_poblaciones_ccaa(
-        comunidades, poblacion_dict)
-    return poblaciones_comunidades
 
 
 def generar_grafico_poblacion(poblaciones_comunidades):
@@ -64,7 +48,7 @@ def manipular_archivo_html():
 
 
 def ejecutar():
-    poblaciones_comunidades = cargar_y_procesar_datos()
+    poblaciones_comunidades = funciones.cargar_y_procesar_datos()
     generar_grafico_poblacion(poblaciones_comunidades)
     manipular_archivo_html()
 

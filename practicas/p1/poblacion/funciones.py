@@ -7,6 +7,7 @@ Por: migue8gl
 
 import locale
 from lxml import html
+import csv
 from decimal import Decimal, ROUND_HALF_UP
 
 
@@ -101,3 +102,18 @@ def obtener_lista_ccaa_ordenada(poblaciones_ccaa):
         reverse=True
     )
     return poblaciones_sorted
+
+
+def cargar_y_procesar_datos():
+    # Obtenemos las comunidades autónomas y provincias
+    comunidades = obtener_ca_provincias()
+
+    #  Limpiar el CSV de provincias y darle un nuevo nombre
+    limpiar_csv_poblaciones('poblacionProvinciasHM2010-17-final.csv')
+    # Abrimos y procesamos el archivo CSV
+    datos_csv = open(
+        './resultados/poblacionProvinciasHM2010-17-final.csv', 'r', encoding="utf8")
+    poblacion_dict = csv.DictReader(datos_csv, delimiter=';')
+    poblaciones_comunidades = obtener_poblaciones_ccaa(
+        comunidades, poblacion_dict)
+    return poblaciones_comunidades

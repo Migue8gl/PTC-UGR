@@ -16,10 +16,8 @@ estar desgregado por hombres y mujeres.
 
 import csv
 import funciones
-def calcular_variaciones_ccaa(poblacion_dict):
-    ca_provincias = funciones.obtener_ca_provincias()
-    poblaciones_ccaa = funciones.obtener_poblaciones_ccaa(
-        ca_provincias, poblacion_dict)
+def calcular_variaciones_ccaa():
+    poblaciones_ccaa = funciones.cargar_y_procesar_datos()
 
     poblaciones_sorted = funciones.obtener_lista_ccaa_ordenada(
         poblaciones_ccaa)
@@ -86,16 +84,12 @@ def ejecutar():
     # Limpiamos el CSV de provincias y le damos un nuevo nombre
     funciones.limpiar_csv_poblaciones('poblacionProvinciasHM2010-17-final.csv')
 
-    # Leemos el archivo CSV limpio como un diccionario
-    with open('./resultados/poblacionProvinciasHM2010-17-final.csv', encoding="utf8") as csvarchivo:
-        poblacion_dict = csv.DictReader(csvarchivo, delimiter=';')
+    # Creamos la tabla HTML
+    file_table = open(
+        "./resultados/variacionComAutonomas.html", "w", encoding="utf8")
 
-        # Creamos la tabla HTML
-        file_table = open(
-            "./resultados/variacionComAutonomas.html", "w", encoding="utf8")
-
-        # Agregamos la cabecera y el inicio del HTML
-        cadena_html = """<!DOCTYPE HTML5><html>
+    # Agregamos la cabecera y el inicio del HTML
+    cadena_html = """<!DOCTYPE HTML5><html>
         <head><title>Variación Provincias</title>
         <link rel="stylesheet" href="../entradas/aux/estilo.css">
         <meta charset="utf8">
@@ -108,51 +102,51 @@ def ejecutar():
         <body><table><caption>Tabla variaciones relativas/absolutas CA</caption>
         <tbody>"""
 
-        # Agregamos las columnas correspondientes de variaciones
-        cadena_html += """<tr><th scope="col"></th><th scope="col" colspan=14>
+    # Agregamos las columnas correspondientes de variaciones
+    cadena_html += """<tr><th scope="col"></th><th scope="col" colspan=14>
         Variación Absoluta</th><th scope="col" colspan=14>Variación Relativa
         </th></tr><tr>"""
 
-        # Agregamos las columnas de hombres y mujeres
-        cadena_html += """<tr><th scope="col"></th><th scope="col" colspan=7>
+    # Agregamos las columnas de hombres y mujeres
+    cadena_html += """<tr><th scope="col"></th><th scope="col" colspan=7>
         Hombres</th><th scope="col" colspan=7>Mujeres</th>
         <th scope="col" colspan=7>Hombres</th>
         <th scope="col" colspan=7>Mujeres</th></tr><tr>"""
 
-        # Agregamos los campos de nuestra tabla
-        cabecera = '2017;2016;2015;2014;2013;2012;2011'.split(';')
-        cadena_html += '<tr><th scope="col">Provincia</th>'
-        for _ in range(4):
-            for campo in cabecera:
-                cadena_html += '<th>' + campo + '</th>'
+    # Agregamos los campos de nuestra tabla
+    cabecera = '2017;2016;2015;2014;2013;2012;2011'.split(';')
+    cadena_html += '<tr><th scope="col">Provincia</th>'
+    for _ in range(4):
+        for campo in cabecera:
+            cadena_html += '<th>' + campo + '</th>'
 
-        # Calculamos las variaciones por comunidad autonoma
-        variaciones = calcular_variaciones_ccaa(poblacion_dict)
+    # Calculamos las variaciones por comunidad autonoma
+    variaciones = calcular_variaciones_ccaa()
 
-        for ca in variaciones:
-            cadena_html += '<tr><th scope="row">' + \
-                ca + '</th>'
-            for campo in cabecera:
-                cadena_html += '<td>' + \
-                    funciones.separador_miles(
-                        variaciones[ca]['VarAbs']['H'][campo]) + '</td>'
-            for campo in cabecera:
-                cadena_html += '<td>' + \
-                    funciones.separador_miles(
-                        variaciones[ca]['VarAbs']['M'][campo]) + '</td>'
-            for campo in cabecera:
-                cadena_html += '<td>' + \
-                    funciones.separador_miles(
-                        variaciones[ca]['VarRel']['H'][campo]) + '</td>'
-            for campo in cabecera:
-                cadena_html += '<td>' + \
-                    funciones.separador_miles(
-                        variaciones[ca]['VarRel']['M'][campo]) + '</td>'
-            cadena_html += '</tr>'
+    for ca in variaciones:
+        cadena_html += '<tr><th scope="row">' + \
+            ca + '</th>'
+        for campo in cabecera:
+            cadena_html += '<td>' + \
+                funciones.separador_miles(
+                    variaciones[ca]['VarAbs']['H'][campo]) + '</td>'
+        for campo in cabecera:
+            cadena_html += '<td>' + \
+                funciones.separador_miles(
+                    variaciones[ca]['VarAbs']['M'][campo]) + '</td>'
+        for campo in cabecera:
+            cadena_html += '<td>' + \
+                funciones.separador_miles(
+                    variaciones[ca]['VarRel']['H'][campo]) + '</td>'
+        for campo in cabecera:
+            cadena_html += '<td>' + \
+                funciones.separador_miles(
+                    variaciones[ca]['VarRel']['M'][campo]) + '</td>'
+        cadena_html += '</tr>'
 
-        cadena_html += '</tbody></table></body></html>'
-        file_table.write(cadena_html)
-        file_table.close()
+    cadena_html += '</tbody></table></body></html>'
+    file_table.write(cadena_html)
+    file_table.close()
 
 
 if __name__ == "__main__":
