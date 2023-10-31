@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Oct 28 19:23:05 2023
-
-@author: migue8gl
+Creado el Sáb Oct 28 19:23:05 2023
+Por: migue8gl 
 """
-
-"""
-Script R3: Mostrar en página web gráfico de la media poblacional de cada
-comunidad autónoma.
-"""
-
-
-
 
 import funciones
 import csv
 import matplotlib.pyplot as plt
-def get_grafico(poblaciones_comunidades):
-    # Ordenamos las comunidades autónomas de más población total a menos
+
+def cargar_y_procesar_datos():
+    # Obtenemos las comunidades autónomas y provincias
+    comunidades = funciones.obtener_ca_provincias()
+    
+    # Abrimos y procesamos el archivo CSV
+    datos_csv = open('./resultados/poblacionProvinciasHM2010-17-final.csv', 'r', encoding="utf8")
+    poblacion_dict = csv.DictReader(datos_csv, delimiter=';')
+    poblaciones_comunidades = funciones.obtener_poblaciones_ccaa(comunidades, poblacion_dict)
+    return poblaciones_comunidades
+
+def generar_grafico_poblacion(poblaciones_comunidades):
+    # Ordenamos las comunidades autónomas de mayor a menor población total
     poblaciones_comunidades_sorted = sorted(
         poblaciones_comunidades,
         key=lambda x: sum(
@@ -29,46 +31,39 @@ def get_grafico(poblaciones_comunidades):
 
     plt.figure("barras", figsize=(15, 14))
     plt.title('Población por sexo en el año 2017 (CCAA)')
-    labels = []
-    for index in range(10):
-        ca = poblaciones_comunidades_sorted[index]
-        x_h = poblaciones_comunidades[ca]['H2017']
-        x_m = poblaciones_comunidades[ca]['M2017']
-        plt.bar(index - 0.1, x_h, color="b", width=0.25)
-        plt.bar(index - 0.1 + 0.25, x_m, color="r", width=0.25)
-        labels.append(''.join(
-            char for char in poblaciones_comunidades_sorted[index] if not char.isdigit()))
+    etiquetas = []
+    for indice in range(10):
+        comunidad_autonoma = poblaciones_comunidades_sorted[indice]
+        hombres = poblaciones_comunidades[comunidad_autonoma]['H2017']
+        mujeres = poblaciones_comunidades[comunidad_autonoma]['M2017']
+        plt.bar(indice - 0.1, hombres, color="b", width=0.25)
+        plt.bar(indice - 0.1 + 0.25, mujeres, color="r", width=0.25)
+        etiquetas.append(''.join(
+            letra for letra in poblaciones_comunidades_sorted[indice] if not letra.isdigit()))
 
-    plt.xticks(range(len(labels)), labels, rotation=60)
+    plt.xticks(range(len(etiquetas)), etiquetas, rotation=60)
     plt.savefig('./imagenes/R3.jpg')
 
+def manipular_archivo_html():
+    # Insertamos la imagen en el archivo HTML
+    cadena_html = ''
+    with open('./resultados/poblacionComAutonomas.html', 'r') as archivo:
+        contenido_html = archivo.read()
+
+        # Eliminamos la imagen anterior si existe
+        cadena_html = contenido_html.replace('</body></html>', '')
+        if '<img src="../imagenes/R3.jpg" style="display: block; margin: 0 auto;">' not in contenido_html:
+            # Insertamos la nueva imagen
+            cadena_html += '<img src="../imagenes/R3.jpg" style="display: block; margin: 0 auto;">'
+        cadena_html += '</body></html>'
+
+    with open('./resultados/poblacionComAutonomas.html', 'w') as archivo:
+        archivo.write(cadena_html)
 
 def ejecutar():
-    comunidades = funciones.get_ca_provincias()
+    poblaciones_comunidades = cargar_y_procesar_datos()
+    generar_grafico_poblacion(poblaciones_comunidades)
+    manipular_archivo_html()
 
-    datos_csv = open('./resultados/poblacionProvinciasHM2010-17-final.csv', 'r',
-                     encoding="utf8")
-    poblacion_dict = csv.DictReader(datos_csv, delimiter=';')
-    # Cogemos la información de las comunidades y el csv procesado
-    poblaciones_comunidades = funciones.get_poblaciones_ccaa(
-        comunidades, poblacion_dict)
-    # Obtenemos el gráfico y lo guardamos
-    get_grafico(poblaciones_comunidades)
-
-    # Insertamos la imagen en la web
-    cadena_html = ''
-    with open('./resultados/poblacionComAutonomas.html', 'r') as file:
-        file_table = file.read()
-
-        # Quitamos las etiquetas de cierre html
-        cadena_html = file_table.replace('</body></html>', '')
-        # Si se ejecuta varias veces, debemos borrar los anteriores graficos
-        cadena_html = cadena_html.replace(
-            '<img src="../imagenes/R3.jpg" style="display: block; margin: 0 auto;">', '')
-        cadena_html += '<img src="../imagenes/R3.jpg" style="display: block; margin: 0 auto;">'
-        cadena_html += '</body></html>'
-    with open('./resultados/poblacionComAutonomas.html', 'w') as file:
-        file.write(cadena_html)
-
-
-ejecutar()
+if __name__ == "__main__":
+    ejecutar()
