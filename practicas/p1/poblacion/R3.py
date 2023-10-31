@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Creado el Sáb Oct 28 19:23:05 2023
-Por: migue8gl 
+Por: migue8gl
 """
 
 import funciones
@@ -27,13 +27,8 @@ def cargar_y_procesar_datos():
 
 def generar_grafico_poblacion(poblaciones_comunidades):
     # Ordenamos las comunidades autónomas de mayor a menor población total
-    poblaciones_comunidades_sorted = sorted(
-        poblaciones_comunidades,
-        key=lambda x: sum(
-            int(poblaciones_comunidades[x][str(y)]) for y in range(2017, 2009, -1)
-        ),
-        reverse=True
-    )
+    poblaciones_comunidades_sorted = funciones.obtener_lista_ccaa_ordenada(
+        poblaciones_comunidades)
 
     plt.figure("barras", figsize=(15, 14))
     plt.title('Población por sexo en el año 2017 (CCAA)')

@@ -90,3 +90,14 @@ def obtener_poblaciones_ccaa(comunidades, datos_csv):
                     poblacion_total_ccaa[ca][clave] += float(registro[clave])
 
     return poblacion_total_ccaa
+
+
+def obtener_lista_ccaa_ordenada(poblaciones_ccaa):
+    poblaciones_sorted = sorted(
+        poblaciones_ccaa,
+        key=lambda x: sum(
+            int(poblaciones_ccaa[x][str(y)]) for y in range(2017, 2009, -1)
+        ),
+        reverse=True
+    )
+    return poblaciones_sorted
