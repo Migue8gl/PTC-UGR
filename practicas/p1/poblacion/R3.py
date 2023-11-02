@@ -30,27 +30,12 @@ def generar_grafico_poblacion(poblaciones_comunidades):
     plt.savefig('./imagenes/R3.jpg')
 
 
-def manipular_archivo_html():
-    # Insertamos la imagen en el archivo HTML
-    cadena_html = ''
-    with open('./resultados/poblacionComAutonomas.html', 'r') as archivo:
-        contenido_html = archivo.read()
-
-        # Eliminamos la imagen anterior si existe
-        cadena_html = contenido_html.replace('</body></html>', '')
-        if '<img src="../imagenes/R3.jpg" style="display: block; margin: 0 auto;">' not in contenido_html:
-            # Insertamos la nueva imagen
-            cadena_html += '<img src="../imagenes/R3.jpg" style="display: block; margin: 0 auto;">'
-        cadena_html += '</body></html>'
-
-    with open('./resultados/poblacionComAutonomas.html', 'w') as archivo:
-        archivo.write(cadena_html)
-
-
 def ejecutar():
     poblaciones_comunidades = funciones.cargar_y_procesar_datos()
     generar_grafico_poblacion(poblaciones_comunidades)
-    manipular_archivo_html()
+    ruta_html = './resultados/poblacionComAutonomas.html'
+    ruta_imagen = '../imagenes/R3.jpg'
+    funciones.insertar_imagen_en_html(ruta_html, ruta_imagen)
 
 
 if __name__ == "__main__":

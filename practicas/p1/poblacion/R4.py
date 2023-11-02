@@ -14,7 +14,6 @@ estar desgregado por hombres y mujeres.
 
 
 
-import csv
 import funciones
 def calcular_variaciones_ccaa():
     poblaciones_ccaa = funciones.cargar_y_procesar_datos()

@@ -46,7 +46,7 @@ def limpiar_csv_poblaciones(csv_nombre):
 
 
 def obtener_ca_provincias():
-    # Creamos un diccionario en el que almacenaremos las comunidades autónomas 
+    # Creamos un diccionario en el que almacenaremos las comunidades autónomas
     # como clave y una lista de provincias asociadas
     comunidades_dict = {}
 
@@ -79,7 +79,7 @@ def obtener_poblaciones_ccaa(comunidades, datos_csv):
         if provincia != 'Total Nacional':
             ca = comunidades[provincia]
 
-            # Sumar las poblaciones de la provincia a las poblaciones totales 
+            # Sumar las poblaciones de la provincia a las poblaciones totales
             # de la comunidad autónoma
             for clave in registro:
                 if clave != 'Provincia':
@@ -117,3 +117,21 @@ def cargar_y_procesar_datos():
     poblaciones_comunidades = obtener_poblaciones_ccaa(
         comunidades, poblacion_dict)
     return poblaciones_comunidades
+
+
+def insertar_imagen_en_html(ruta_html, ruta_imagen):
+    # Insertar la imagen en el archivo HTML
+    contenido_html = ''
+
+    with open(ruta_html, 'r') as archivo_html:
+        contenido_html = archivo_html.read()
+
+        # Eliminar la imagen anterior si existe
+        contenido_html = contenido_html.replace('</body></html>', '')
+        if f'<img src="{ruta_imagen}" style="display: block; margin: 0 auto;">' not in contenido_html:
+            # Insertar la nueva imagen
+            contenido_html += f'<img src="{ruta_imagen}" style="display: block; margin: 0 auto;">'
+        contenido_html += '</body></html>'
+
+    with open(ruta_html, 'w') as archivo_html:
+        archivo_html.write(contenido_html)
