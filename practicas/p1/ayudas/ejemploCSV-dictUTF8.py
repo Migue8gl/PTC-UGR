@@ -29,38 +29,13 @@ ficheroInicial.close()
 
 print("\nFichero leido inicial es\n",cadenaPob)
 
-primero=cadenaPob.find("Total")
-ultimo=cadenaPob.find("Notas")
+primero=cadenaPob.find("Provincia")
+ultimo=cadenaPob.rfind("2010")
 
 cadenaFinal=cadenaPob[primero:ultimo]
-
-print("\nFichero leido final es\n",cadenaFinal)
-
-cabecera="Provincia;H2017;H2016;H2015;M2017;M2016;M2015"
-
-ficheroFinal=open("poblacionPruebaFinal.csv", "w",encoding="utf8")
-
-ficheroFinal.write(cabecera+'\n'+cadenaFinal)
-
-ficheroFinal.close()
-
-print("\n------------------------------------------------------------\n")
-# Leer el archivo 'poblacionPruebaFinal.csv' con reader() y 
-# mostrar todos los registros, uno a uno:
-print("Primer caso: se muestra cada linea como una lista de valores")
-with open('poblacionPruebaFinal.csv', encoding="utf8") as csvarchivo:
-    entrada = csv.reader(csvarchivo, delimiter=';')
-    for reg in entrada:
-        print(reg)  # Cada línea se muestra como una lista de valores
+#print(cadenaPob)
 
 
-print("\n------------------------------------------------------------\n")
-# en este segundo caso se lee como una serie de diccionarios
-print("Segundo caso: se muestra cada linea como un diccionario")
-with open('poblacionPruebaFinal.csv', encoding="utf8") as csvarchivo:
-    poblacionDict = csv.DictReader(csvarchivo, delimiter=';')     
-    for regD in poblacionDict:
-        print(regD)
         
       
 

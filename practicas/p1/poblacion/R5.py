@@ -36,7 +36,9 @@ def generar_grafico_poblacion(poblaciones_comunidades):
 
     años = range(2010, 2018)
     plt.xticks(range(len(años)), años)
-    plt.legend(comunidad_autonoma, loc='right',
+    comunidad_autonoma_cleaned = [
+        funciones.limpiar_digitos(ca) for ca in comunidad_autonoma]
+    plt.legend(comunidad_autonoma_cleaned, loc='right',
                bbox_to_anchor=(1.39, 0.5), prop={'size': 17})
 
     plt.savefig('./imagenes/R5.jpg',  bbox_inches='tight')

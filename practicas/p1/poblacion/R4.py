@@ -124,7 +124,7 @@ def ejecutar():
 
     for ca in variaciones:
         cadena_html += '<tr><th scope="row">' + \
-            ca + '</th>'
+            funciones.limpiar_digitos(ca) + '</th>'
         for campo in cabecera:
             cadena_html += '<td>' + \
                 funciones.separador_miles(

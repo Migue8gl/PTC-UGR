@@ -10,6 +10,45 @@ from lxml import html
 import csv
 from decimal import Decimal, ROUND_HALF_UP
 
+"""
+Esta función toma una cadena de texto y elimina todos los dígitos numéricos,
+dejando solo los caracteres no numéricos.
+
+Args:
+    cadena (str): La cadena de texto que se va a limpiar de dígitos.
+
+Returns:
+    str: La cadena de texto resultante sin dígitos numéricos.
+"""
+
+
+def limpiar_digitos(cadena):
+    # Inicializamos una cadena vacía para almacenar el resultado
+    resultado = ""
+
+    # Iteramos a través de cada carácter en la cadena
+    for caracter in cadena:
+        # Verificamos si el carácter no es un dígito
+        if not caracter.isdigit():
+            # Si no es un dígito, lo agregamos al resultado
+            resultado += caracter
+
+    return resultado
+
+
+"""
+Esta función toma un número y opcionalmente una cadena de formato de precisión
+y devuelve el número formateado con separadores de miles.
+
+Args:
+    numero (float): El número que se formateará.
+    precision (str, opcional): La cadena de formato de precisión. 
+    Por defecto, '%.2f'.
+
+Returns:
+    str: El número formateado con separadores de miles.
+"""
+
 
 def separador_miles(numero, precision='%.2f'):
     # Configuramos la localización para separador de miles
@@ -17,11 +56,35 @@ def separador_miles(numero, precision='%.2f'):
     return locale.format_string(precision, numero, grouping=True)
 
 
+"""
+Esta función toma un número y un número de decimales y redondea el número al 
+número de decimales especificado.
+
+Args:
+    numero (float): El número que se redondeará.
+    decimales (int, opcional): El número de decimales al que se redondeará el 
+    número. Por defecto, 2.
+
+Returns:
+    Decimal: El número redondeado.
+"""
+
+
 def redondear_numero(numero, decimales=2):
     return Decimal(numero).quantize(Decimal('1e-{0}'.format(decimales)), rounding=ROUND_HALF_UP)
 
 
+"""
+Esta función limpia un archivo CSV de poblaciones y agrega un encabezado.
+
+Args:
+    csv_nombre (str): El nombre del archivo CSV a limpiar y al que se le 
+    agregará un encabezado.
+"""
+
+
 def limpiar_csv_poblaciones(csv_nombre):
+
     # Leemos el archivo CSV inicial, lo limpiamos y agregamos encabezado
     fichero_inicial = open(
         './entradas/poblacionProvinciasHM2010-17.csv', 'r', encoding='utf8')
@@ -45,6 +108,15 @@ def limpiar_csv_poblaciones(csv_nombre):
     fichero_final.close()
 
 
+"""
+Esta función obtiene un diccionario que asocia comunidades autónomas con sus 
+provincias correspondientes.
+
+Returns:
+    dict: Un diccionario que asocia comunidades autónomas con provincias.
+"""
+
+
 def obtener_ca_provincias():
     # Creamos un diccionario en el que almacenaremos las comunidades autónomas
     # como clave y una lista de provincias asociadas
@@ -66,6 +138,21 @@ def obtener_ca_provincias():
         comunidades_dict[provincia] = comunidad_autonoma
 
     return comunidades_dict
+
+
+"""
+Esta función calcula la población total de cada comunidad autónoma a partir de 
+un archivo CSV de poblaciones y un diccionario de asociación de comunidades autónomas con provincias.
+
+Args:
+    comunidades (dict): Un diccionario que asocia comunidades autónomas con 
+    provincias.
+    datos_csv (csv.DictReader): El archivo CSV de poblaciones.
+
+Returns:
+    dict: Un diccionario que asocia comunidades autónomas con la población 
+    total de cada año.
+"""
 
 
 def obtener_poblaciones_ccaa(comunidades, datos_csv):
@@ -94,6 +181,18 @@ def obtener_poblaciones_ccaa(comunidades, datos_csv):
 
 
 def obtener_lista_ccaa_ordenada(poblaciones_ccaa):
+    """
+    Esta función devuelve una lista de comunidades autónomas ordenadas por su 
+    población total.
+
+    Args:
+        poblaciones_ccaa (dict): Un diccionario que asocia comunidades 
+        autónomas con la población total de cada año.
+
+    Returns:
+        list: Una lista de comunidades autónomas ordenadas por su población 
+        total.
+    """
     poblaciones_sorted = sorted(
         poblaciones_ccaa,
         key=lambda x: sum(
@@ -105,6 +204,14 @@ def obtener_lista_ccaa_ordenada(poblaciones_ccaa):
 
 
 def cargar_y_procesar_datos():
+    """
+    Esta función carga y procesa los datos de población y devuelve un 
+    diccionario que asocia comunidades autónomas con la población total.
+
+    Returns:
+        dict: Un diccionario que asocia comunidades autónomas con la población 
+        total.
+    """
     # Obtenemos las comunidades autónomas y provincias
     comunidades = obtener_ca_provincias()
 
@@ -120,6 +227,15 @@ def cargar_y_procesar_datos():
 
 
 def insertar_imagen_en_html(ruta_html, ruta_imagen):
+    """
+    Esta función inserta una imagen en un archivo HTML.
+
+    Args:
+        ruta_html (str): La ruta al archivo HTML en el que se insertará la 
+        imagen.
+        ruta_imagen (str): La ruta a la imagen que se insertará en el archivo 
+        HTML.
+    """
     # Insertar la imagen en el archivo HTML
     contenido_html = ''
 
@@ -128,9 +244,9 @@ def insertar_imagen_en_html(ruta_html, ruta_imagen):
 
         # Eliminar la imagen anterior si existe
         contenido_html = contenido_html.replace('</body></html>', '')
-        if f'<img src="{ruta_imagen}" style="display: block; margin: 0 auto;">' not in contenido_html:
+        if f'<img src="{ruta_imagen}" style="display: block; margin: 50px auto;">' not in contenido_html:
             # Insertar la nueva imagen
-            contenido_html += f'<img src="{ruta_imagen}" style="display: block; margin: 0 auto;">'
+            contenido_html += f'<img src="{ruta_imagen}" style="display: block; margin: 50px auto;">'
         contenido_html += '</body></html>'
 
     with open(ruta_html, 'w') as archivo_html:
