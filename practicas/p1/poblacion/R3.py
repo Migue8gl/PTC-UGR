@@ -7,26 +7,29 @@ Por: migue8gl
 
 import funciones
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def generar_grafico_poblacion(poblaciones_comunidades):
     # Ordenamos las comunidades autónomas de mayor a menor población total
     poblaciones_comunidades_sorted = funciones.obtener_lista_ccaa_ordenada(
-        poblaciones_comunidades)
+        poblaciones_comunidades)[:10]  # Select the top 10
+
+    hombres = np.array([poblaciones_comunidades[comunidad_autonoma]['H2017'] for comunidad_autonoma in poblaciones_comunidades_sorted])
+    mujeres = np.array([poblaciones_comunidades[comunidad_autonoma]['M2017'] for comunidad_autonoma in poblaciones_comunidades_sorted])
+
+    ind = np.arange(len(poblaciones_comunidades_sorted))  # Índices para las barras
 
     plt.figure("barras", figsize=(15, 14))
     plt.title('Población por sexo en el año 2017 (CCAA)')
-    etiquetas = []
-    for indice in range(10):
-        comunidad_autonoma = poblaciones_comunidades_sorted[indice]
-        hombres = poblaciones_comunidades[comunidad_autonoma]['H2017']
-        mujeres = poblaciones_comunidades[comunidad_autonoma]['M2017']
-        plt.bar(indice - 0.1, hombres, color="b", width=0.25)
-        plt.bar(indice - 0.1 + 0.25, mujeres, color="r", width=0.25)
-        etiquetas.append(''.join(
-            letra for letra in poblaciones_comunidades_sorted[indice] if not letra.isdigit()))
 
-    plt.xticks(range(len(etiquetas)), etiquetas, rotation=60)
+    plt.bar(ind - 0.1, hombres, color="b", width=0.25, label='Hombres')
+    plt.bar(ind - 0.1 + 0.25, mujeres, color="r", width=0.25, label='Mujeres')
+
+    etiquetas = [''.join(letra for letra in comunidad_autonoma if not letra.isdigit()) for comunidad_autonoma in poblaciones_comunidades_sorted]
+
+    plt.xticks(ind, etiquetas, rotation=60)
+    plt.legend()
     plt.savefig('./imagenes/R3.jpg')
 
 

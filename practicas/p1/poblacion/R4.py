@@ -15,64 +15,60 @@ estar desgregado por hombres y mujeres.
 
 
 import funciones
+import numpy as np
 def calcular_variaciones_ccaa():
     poblaciones_ccaa = funciones.cargar_y_procesar_datos()
-
     poblaciones_sorted = funciones.obtener_lista_ccaa_ordenada(
         poblaciones_ccaa)
-
     variaciones = {}
 
     # Obtenemos claves de años para hombres y mujeres
     ca = poblaciones_sorted[0]
-    años_h = [key for key in poblaciones_ccaa[ca].keys()
-              if key.startswith('H')]
-    años_m = [key for key in poblaciones_ccaa[ca].keys()
-              if key.startswith('M')]
+    años_h = np.array(
+        [key for key in poblaciones_ccaa[ca].keys() if key.startswith('H')])
+    años_m = np.array(
+        [key for key in poblaciones_ccaa[ca].keys() if key.startswith('M')])
 
-    # Var absoluta
     for ca in poblaciones_sorted:
         if ca not in variaciones:
             variaciones[ca] = {'VarAbs': {'H': {}, 'M': {}},
                                'VarRel': {'H': {}, 'M': {}}}
 
-        # Var absoluta hombre
+        # Var absoluta
         for año in años_h:
             if año != 'H2010':
                 año_minus_one = 'H' + str(int(año.replace('H', '')) - 1)
-                var_abs = float(poblaciones_ccaa[ca][año]) - \
-                    float(poblaciones_ccaa[ca][año_minus_one])
+                var_abs = np.float64(
+                    poblaciones_ccaa[ca][año]) - np.float64(poblaciones_ccaa[ca][año_minus_one])
                 var_abs = funciones.redondear_numero(var_abs, 2)
                 variaciones[ca]['VarAbs']['H'][año.replace('H', '')] = var_abs
 
-        # Var absoluta mujeres
         for año in años_m:
             if año != 'M2010':
                 año_minus_one = 'M' + str(int(año.replace('M', '')) - 1)
-                var_abs = float(poblaciones_ccaa[ca][año]) - \
-                    float(poblaciones_ccaa[ca][año_minus_one])
+                var_abs = np.float64(
+                    poblaciones_ccaa[ca][año]) - np.float64(poblaciones_ccaa[ca][año_minus_one])
                 var_abs = funciones.redondear_numero(var_abs, 2)
                 variaciones[ca]['VarAbs']['M'][año.replace('M', '')] = var_abs
 
-        # Var relativa hombres
+        # Var relativa
         for año in años_h:
             if año != 'H2010':
                 año_minus_one = 'H' + str(int(año.replace('H', '')) - 1)
-                var_abs = float(poblaciones_ccaa[ca][año]) - \
-                    float(poblaciones_ccaa[ca][año_minus_one])
+                var_abs = np.float64(
+                    poblaciones_ccaa[ca][año]) - np.float64(poblaciones_ccaa[ca][año_minus_one])
                 var_rel = (
-                    var_abs / float(poblaciones_ccaa[ca][año_minus_one]) * 100)
+                    var_abs / np.float64(poblaciones_ccaa[ca][año_minus_one])) * 100
                 var_rel = funciones.redondear_numero(var_rel, 2)
                 variaciones[ca]['VarRel']['H'][año.replace('H', '')] = var_rel
 
-        # Var relativa mujeres
         for año in años_m:
             if año != 'M2010':
                 año_minus_one = 'M' + str(int(año.replace('M', '')) - 1)
-                var_abs = float(poblaciones_ccaa[ca][año]) - \
-                    float(poblaciones_ccaa[ca][año_minus_one])
+                var_abs = np.float64(
+                    poblaciones_ccaa[ca][año]) - np.float64(poblaciones_ccaa[ca][año_minus_one])
                 var_rel = (
-                    var_abs / float(poblaciones_ccaa[ca][año_minus_one]) * 100)
+                    var_abs / np.float64(poblaciones_ccaa[ca][año_minus_one])) * 100
                 var_rel = funciones.redondear_numero(var_rel, 2)
                 variaciones[ca]['VarRel']['M'][año.replace('M', '')] = var_rel
 
