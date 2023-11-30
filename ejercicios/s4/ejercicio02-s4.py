@@ -44,4 +44,4 @@ n = int(input('Introduce un número N para crear lista: '))
 lista = inicializar_lista(n)
 
 print('Función restricción -> {}'.format(impares(lista)))
-print('Función CON restricción -> {}'.format(impares_v2(lista)))
+print('Función NO restricción -> {}'.format(impares_v2(lista)))

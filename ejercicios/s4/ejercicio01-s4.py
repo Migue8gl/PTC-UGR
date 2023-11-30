@@ -38,4 +38,4 @@ n = int(input('Introduce un número N para crear lista: '))
 lista = inicializar_lista(n)
 
 print('Función restricción -> {}'.format(suma(lista)))
-print('Función CON restricción -> {}'.format(suma_v2(lista)))
+print('Función NO restricción -> {}'.format(suma_v2(lista)))

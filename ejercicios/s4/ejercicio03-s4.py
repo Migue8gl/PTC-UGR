@@ -53,5 +53,6 @@ def max_min_v2(lista):
 n = int(input('Introduce un número N para crear lista: '))
 lista = inicializar_lista(n)
 
+print('Lista: {}'.format(lista))
 print('Función restricción -> {}'.format(max_min(lista)))
-print('Función CON restricción -> {}'.format(max_min_v2(lista)))
+print('Función NO restricción -> {}'.format(max_min_v2(lista)))
