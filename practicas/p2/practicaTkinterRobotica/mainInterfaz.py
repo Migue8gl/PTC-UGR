@@ -9,22 +9,43 @@ Created on Thu Nov 30 17:31:32 2023
 import tkinter as tk
 import vrep
 from parameters import Parameters
+import capturar
+import os
 
 # -------------- GLOBAL VALUES ------------- #
+
 title = 'Práctica PTC Tkinter Robótica'
 clientID = -1
 parameters = Parameters()
+items = (
+    "positivo1/enPieCerca.json",
+    "positivo2/enPieMedia.json",
+    "positivo3/enPieLejos.json",
+    "positivo4/sentadoCerca.json",
+    "positivo5/sentadoMedia.json",
+    "positivo6/sentadoLejos.json",
+    "negativo1/cilindroMenorCerca.json",
+    "negativo2/cilindroMenorMedia.json",
+    "negativo3/cilindroMenorLejos.json",
+    "negativo4/cilindroMayorCerca.json",
+    "negativo5/cilindroMayorMedia.json",
+    "negativo6/cilindroMayorLejos.json",
+)
+selected_files = [False for _ in range(0, len(items))]
+
+# -------------- FUNCTIONALITY ------------- #
 
 
 def start_vrep():
     global clientID
-    
+
     if clientID != -1:
         tk.messagebox.showinfo(
-            title=title, message='Ya se está conectado a VREP')
+            title=title, message='Ya está conectado a VREP')
     else:
+        vrep.simxFinish(-1)
         clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
-    
+
         if clientID == -1:
             tk.messagebox.showerror(title, message='Debe iniciar el simulador')
         else:
@@ -49,8 +70,48 @@ def exit_vrep():
 
 
 def capture():
-    group_button.config(state=tk.NORMAL)
-    pass
+    selected_files = file_list.curselection()
+
+    # Si un archivo ha sido seleccionado
+    if selected_files:
+        selected_file = file_list.get(selected_files[0])
+
+        # Comprobamos si existe el archivo
+        file_exists = os.path.isfile(selected_file)
+
+        # Si existe el archivo
+        if file_exists:
+            user_response = tk.messagebox.askyesno(
+                message="El fichero: '{}' ya existe. Se creará de nuevo. ¿Está seguro?".format(
+                    selected_file),
+                title=title
+            )
+
+        # Si el archivo no existe
+        else:
+            user_response = tk.messagebox.askyesno(
+                message="Se va a crear el fichero: '{}' ¿Está seguro?".format(
+                    selected_file),
+                title=title
+            )
+
+        if user_response:
+            with open(selected_file, "w"):
+                pass  # Creo un archivo vacío
+
+        print(clientID)
+        capturar.capture(clientID, selected_file, parameters.get_iterations())
+
+        # Actualizamos el estado de ficheros seleccionados
+        selected_files[items.index(selected_file)] = True
+
+        # Si todos los ficheros han sido seleccionados, ya se puede habilitar el botṕn de agrupar
+        if all(selected_files):
+            group_button.config(state=tk.NORMAL)
+    else:
+        # Si no se ha seleccionado ningún archivo
+        tk.messagebox.showwarning(
+            title=title, message="Debe elegir algún fichero de la lista")
 
 
 def group():
@@ -94,11 +155,13 @@ def validate_numeric_input(value, name):
         float(value)
         return True
     except ValueError:
-        tk.messagebox.showwarning(title, message='Se debe introducir un número')
+        tk.messagebox.showwarning(
+            title, message='Se debe introducir un número')
         return False
 
 
 # ------------- WINDOW SIZE ------------- #
+
 root = tk.Tk()
 root.title(title)
 root.geometry('700x300')
@@ -228,5 +291,12 @@ max_points_box.grid(row=7, column=2)
 distance_threshold_box.grid(row=8, column=2)
 
 # ------------- FOURTH COLUMN ------------ #
+
+files = tk.Label(root, text="Fichero para la captura")
+files.grid(row=1, column=3)
+
+file_list = tk.Listbox(root, width=35, height=12)
+file_list.insert(0, *items)
+file_list.grid(row=3, column=3, rowspan=6)
 
 root.mainloop()
