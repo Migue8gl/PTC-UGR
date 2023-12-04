@@ -8,30 +8,94 @@ Created on Thu Nov 30 17:31:32 2023
 
 import tkinter as tk
 import vrep
+from parameters import Parameters
 
 # -------------- GLOBAL VALUES ------------- #
 title = 'Práctica PTC Tkinter Robótica'
 clientID = -1
+parameters = Parameters()
 
 
 def start_vrep():
-    clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
-    print(clientID)
-
-    if clientID == -1:
-        tk.messagebox.showerror(title, message='Debe iniciar el simulador')
-    else:
+    global clientID
+    
+    if clientID != -1:
         tk.messagebox.showinfo(
-            title=title, message='Conexión con VREP establecida')
-        status_text.set('Estado: Conectado a VREP')
-        exit_vrep_button.config(state=tk.NORMAL)
+            title=title, message='Ya se está conectado a VREP')
+    else:
+        clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
+    
+        if clientID == -1:
+            tk.messagebox.showerror(title, message='Debe iniciar el simulador')
+        else:
+            tk.messagebox.showinfo(
+                title=title, message='Conexión con VREP establecida')
+            status_text.set('Estado: Conectado a VREP')
+            exit_vrep_button.config(state=tk.NORMAL)
+            capture_button.config(state=tk.NORMAL)
 
 
 def exit_vrep():
+    global clientID
     vrep.simxStopSimulation(clientID, vrep.simx_opmode_oneshot_wait)
     vrep.simxFinish(clientID)
+    clientID = -1
     status_text.set('Estado: No conectado a VREP')
     exit_vrep_button.config(state=tk.DISABLED)
+    capture_button.config(state=tk.DISABLED)
+    group_button.config(state=tk.DISABLED)
+    extract_features_button.config(state=tk.DISABLED)
+    train_classifier_button.config(state=tk.DISABLED)
+
+
+def capture():
+    group_button.config(state=tk.NORMAL)
+    pass
+
+
+def group():
+    extract_features_button.config(state=tk.NORMAL)
+    pass
+
+
+def extract_features():
+    train_classifier_button.config(state=tk.NORMAL)
+    pass
+
+
+def train_classifier():
+    pass
+
+
+def exit_window():
+    if clientID != -1:
+        tk.messagebox.showerror(title, message='Antes de salir desconectar')
+    else:
+        answer = tk.messagebox.askyesno(
+            title, message='¿Estás seguro de que desea salir?')
+        if answer:
+            root.destroy()
+
+
+def change_parameters():
+    global parameters
+    parameters = Parameters(
+        iterations_parameter_str.get(), near_parameter_str.get(),
+        medium_parameter_str.get(), far_parameter_str.get(),
+        min_points_parameter_str.get(), max_points_parameter_str.get(),
+        distance_threshold_parameter_str.get())
+    print(parameters)
+
+
+def validate_numeric_input(value, name):
+    if value == "":
+        return True
+    try:
+        float(value)
+        return True
+    except ValueError:
+        tk.messagebox.showwarning(title, message='Se debe introducir un número')
+        return False
 
 
 # ------------- WINDOW SIZE ------------- #
@@ -57,7 +121,112 @@ status_text.set('Estado: No conectado a VREP')
 status_label = tk.Label(root, textvariable=status_text)
 status_label.grid(row=3, column=0)
 
+capture_button = tk.Button(
+    root, text='Capturar', state=tk.DISABLED, command=capture)
+capture_button.grid(row=4, column=0)
+
+group_button = tk.Button(
+    root, text='Agrupar', state=tk.DISABLED, command=group)
+group_button.grid(row=5, column=0)
+
+group_button = tk.Button(
+    root, text='Agrupar', state=tk.DISABLED, command=group)
+group_button.grid(row=5, column=0)
+
+extract_features_button = tk.Button(
+    root, text='Extraer características', state=tk.DISABLED, command=extract_features)
+extract_features_button.grid(row=6, column=0)
+
+train_classifier_button = tk.Button(
+    root, text='Entrenar clasificador', state=tk.DISABLED, command=train_classifier)
+train_classifier_button.grid(row=7, column=0)
+
+exit_window_button = tk.Button(
+    root, text='Salir', command=exit_window)
+exit_window_button.grid(row=8, column=0)
+
 # ------------ SECOND COLUMN ------------ #
+
+parameter_label = tk.Label(root, text='Parámetros')
+parameter_label.grid(row=1, column=1, sticky='e')
+
+iterations_label = tk.Label(root, text="Iteraciones:")
+iterations_label.grid(row=2, column=1, sticky='e')
+
+near_label = tk.Label(root, text="Cerca:")
+near_label.grid(row=3, column=1, sticky='e')
+
+medium_label = tk.Label(root, text="Media:")
+medium_label.grid(row=4, column=1, sticky='e')
+
+far_label = tk.Label(root, text="Lejos:")
+far_label.grid(row=5, column=1, sticky='e')
+
+min_points_label = tk.Label(root, text="MinPuntos:")
+min_points_label.grid(row=6, column=1, sticky='e')
+
+max_points_label = tk.Label(root, text="MaxPuntos:")
+max_points_label.grid(row=7, column=1, sticky='e')
+
+distance_threshold_label = tk.Label(root, text="UmbralDistancia:")
+distance_threshold_label.grid(row=8, column=1, sticky='e')
+
+change_button = tk.Button(root, text='Cambiar', command=change_parameters)
+change_button.grid(row=9, column=1)
+
 # ------------- THIRD COLUMN ------------ #
+
+# Validación de entrada
+validate_numeric = (root.register(validate_numeric_input), '%P', '%W')
+
+# Variables de texto
+iterations_parameter_str = tk.StringVar()
+iterations_parameter_str.set(str(parameters.get_iterations()))
+
+near_parameter_str = tk.StringVar()
+near_parameter_str.set(str(parameters.get_near()))
+
+medium_parameter_str = tk.StringVar()
+medium_parameter_str.set(str(parameters.get_medium()))
+
+far_parameter_str = tk.StringVar()
+far_parameter_str.set(str(parameters.get_far()))
+
+min_points_parameter_str = tk.StringVar()
+min_points_parameter_str.set(str(parameters.get_min_points()))
+
+max_points_parameter_str = tk.StringVar()
+max_points_parameter_str.set(str(parameters.get_max_points()))
+
+distance_threshold_parameter_str = tk.StringVar()
+distance_threshold_parameter_str.set(str(parameters.get_distance_threshold()))
+
+# Elementos de entrada de texto
+iterations_box = tk.Entry(root, width=5, textvariable=iterations_parameter_str,
+                          validate='key', validatecommand=validate_numeric)
+near_box = tk.Entry(root, width=5, textvariable=near_parameter_str,
+                    validate='key', validatecommand=validate_numeric)
+medium_box = tk.Entry(root, width=5, textvariable=medium_parameter_str,
+                      validate='key', validatecommand=validate_numeric)
+far_box = tk.Entry(root, width=5, textvariable=far_parameter_str,
+                   validate='key', validatecommand=validate_numeric)
+min_points_box = tk.Entry(root, width=5, textvariable=min_points_parameter_str,
+                          validate='key', validatecommand=validate_numeric)
+max_points_box = tk.Entry(root, width=5, textvariable=max_points_parameter_str,
+                          validate='key', validatecommand=validate_numeric)
+distance_threshold_box = tk.Entry(
+    root, width=5, textvariable=distance_threshold_parameter_str,
+    validate='key', validatecommand=validate_numeric)
+
+# Posición de los elementos
+iterations_box.grid(row=2, column=2)
+near_box.grid(row=3, column=2)
+medium_box.grid(row=4, column=2)
+far_box.grid(row=5, column=2)
+min_points_box.grid(row=6, column=2)
+max_points_box.grid(row=7, column=2)
+distance_threshold_box.grid(row=8, column=2)
+
+# ------------- FOURTH COLUMN ------------ #
 
 root.mainloop()
