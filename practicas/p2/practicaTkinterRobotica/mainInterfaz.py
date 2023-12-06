@@ -99,6 +99,7 @@ def capture():
             with open(selected_file, "w"):
                 pass  # Creo un archivo vacío
 
+            # Obtenemos los límites por los que debe moverse el personaje/objeto
             capture_parameters = {
                 'iterations': parameters.get_iterations(),
                 'lower_bound': parameters.get_near(),
@@ -156,11 +157,19 @@ def exit_window():
 
 def change_parameters():
     global parameters
-    parameters = Parameters(
-        iterations_parameter_str.get(), near_parameter_str.get(),
-        medium_parameter_str.get(), far_parameter_str.get(),
-        min_points_parameter_str.get(), max_points_parameter_str.get(),
-        distance_threshold_parameter_str.get())
+
+    # Convertir los parámetros de cadena a flotante
+    iterations = float(iterations_parameter_str.get())
+    near = float(near_parameter_str.get())
+    medium = float(medium_parameter_str.get())
+    far = float(far_parameter_str.get())
+    min_points = float(min_points_parameter_str.get())
+    max_points = float(max_points_parameter_str.get())
+    distance_threshold = float(distance_threshold_parameter_str.get())
+
+    # Crear un objeto Parameters con valores enteros
+    parameters = Parameters(iterations, near, medium,
+                            far, min_points, max_points, distance_threshold)
     print(parameters)
 
 
