@@ -117,7 +117,7 @@ def capture():
 
             capturar.capture(
                 clientID, selected_file, **capture_parameters)
-            print('Captura de datos para: {} completada!'.format(selected_file))
+            print('Captura de datos para: {} completada'.format(selected_file))
 
             # Actualizamos el estado de ficheros seleccionados
             selected_files_boolean[items.index(selected_file)] = True
