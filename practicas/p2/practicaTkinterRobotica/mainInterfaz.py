@@ -98,12 +98,29 @@ def capture():
         if user_response:
             with open(selected_file, "w"):
                 pass  # Creo un archivo vacío
-            capturar.capture(clientID, selected_file, parameters.get_iterations())
+
+            capture_parameters = {
+                'iterations': parameters.get_iterations(),
+                'lower_bound': parameters.get_near(),
+                'upper_bound': parameters.get_medium()}
+
+            if 'Cerca' in selected_file:
+                capture_parameters['lower_bound'] = parameters.get_near()
+                capture_parameters['upper_bound'] = parameters.get_medium()
+            elif 'Media' in selected_file:
+                capture_parameters['lower_bound'] = parameters.get_medium()
+                capture_parameters['upper_bound'] = parameters.get_far()
+            else:
+                capture_parameters['lower_bound'] = parameters.get_far()
+                capture_parameters['upper_bound'] = parameters.get_far()+1
+
+            capturar.capture(
+                clientID, selected_file, **capture_parameters)
             print('Captura de datos para: {} completada!'.format(selected_file))
-    
+
             # Actualizamos el estado de ficheros seleccionados
             selected_files_boolean[items.index(selected_file)] = True
-    
+
             # Si todos los ficheros han sido seleccionados, ya se puede habilitar el botṕn de agrupar
             if all(selected_files_boolean):
                 group_button.config(state=tk.NORMAL)
