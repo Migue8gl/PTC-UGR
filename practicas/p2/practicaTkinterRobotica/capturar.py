@@ -10,20 +10,35 @@ import vrep
 import json
 import cv2
 import numpy as np
+import time
 
 
 def capture(clientID, file, iterations):
-    
-    print(clientID)
+    # Guardar la referencia al robot
+    _, robothandle = vrep.simxGetObjectHandle(
+        clientID, 'Pioneer_p3dx', vrep.simx_opmode_oneshot_wait)
+
     # Guardar la referencia de la camara
     _, camhandle = vrep.simxGetObjectHandle(
         clientID, 'Vision_sensor', vrep.simx_opmode_oneshot_wait)
 
+    # Acceder a los datos del laser
+    _, datosLaserComp = vrep.simxGetStringSignal(
+        clientID, 'LaserData', vrep.simx_opmode_streaming)
+
+    # Iniciar la camara y esperar un segundo para llenar el buffer
+    _, resolution, image = vrep.simxGetVisionSensorImage(
+        clientID, camhandle, 0, vrep.simx_opmode_streaming)
+
+    # Esperamos a que el buffer se llene
+    time.sleep(1)
+
     # Creamos el archivo JSON
     max_iter = iterations
+    seconds = 0.5
     iteration = 1
 
-    cabecera = {"MaxIteraciones": max_iter}
+    cabecera = {'TiempoSleep': seconds, "MaxIteraciones": max_iter}
     data_laser = open(file, "w")
     data_laser.write(json.dumps(cabecera)+'\n')
 
@@ -36,6 +51,7 @@ def capture(clientID, file, iterations):
 
         _, signal_value = vrep.simxGetStringSignal(
             clientID, 'LaserData', vrep.simx_opmode_buffer)
+        time.sleep(seconds)
 
         datos_laser = vrep.simxUnpackFloats(signal_value)
         for indice in range(0, len(datos_laser), 3):
@@ -48,7 +64,7 @@ def capture(clientID, file, iterations):
                    "PuntosX": puntos_x, "PuntosY": puntos_y}
         data_laser.write(json.dumps(lectura)+'\n')
 
-        if iteration == 0 or iteration == max_iter-1:
+        if iteration == 1 or iteration == max_iter:
             # Guardar frame de la camara, rotarlo y convertirlo a BGR
             _, resolution, image = vrep.simxGetVisionSensorImage(
                 clientID, camhandle, 0, vrep.simx_opmode_buffer)

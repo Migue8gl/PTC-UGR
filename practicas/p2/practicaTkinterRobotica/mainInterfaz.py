@@ -31,7 +31,7 @@ items = (
     "negativo5/cilindroMayorMedia.json",
     "negativo6/cilindroMayorLejos.json",
 )
-selected_files = [False for _ in range(0, len(items))]
+selected_files_boolean = [False for _ in range(0, len(items))]
 
 # -------------- FUNCTIONALITY ------------- #
 
@@ -98,16 +98,15 @@ def capture():
         if user_response:
             with open(selected_file, "w"):
                 pass  # Creo un archivo vacío
-
-        print(clientID)
-        capturar.capture(clientID, selected_file, parameters.get_iterations())
-
-        # Actualizamos el estado de ficheros seleccionados
-        selected_files[items.index(selected_file)] = True
-
-        # Si todos los ficheros han sido seleccionados, ya se puede habilitar el botṕn de agrupar
-        if all(selected_files):
-            group_button.config(state=tk.NORMAL)
+            capturar.capture(clientID, selected_file, parameters.get_iterations())
+            print('Captura de datos para: {} completada!'.format(selected_file))
+    
+            # Actualizamos el estado de ficheros seleccionados
+            selected_files_boolean[items.index(selected_file)] = True
+    
+            # Si todos los ficheros han sido seleccionados, ya se puede habilitar el botṕn de agrupar
+            if all(selected_files_boolean):
+                group_button.config(state=tk.NORMAL)
     else:
         # Si no se ha seleccionado ningún archivo
         tk.messagebox.showwarning(
