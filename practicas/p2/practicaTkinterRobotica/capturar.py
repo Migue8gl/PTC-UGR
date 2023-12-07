@@ -71,6 +71,7 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
         random_step_x = random.uniform(0, 0.05)
         random_step_y = random.uniform(-0.2, 0.2)
         rotation_step = 0.5
+        max_x, max_y = 2.3, 2.3
 
         # Controlamos el movimiento
         if change_direction:
@@ -80,7 +81,6 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
 
             if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
                 change_direction = False
-                new_x = lower_bound + random_step_x
 
         else:
             new_x = entity_position[0] + movement_step + random_step_x
@@ -89,7 +89,10 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
 
             if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
                 change_direction = True
-                new_x = lower_bound + random_step_x
+        if new_x >= max_x:
+            new_x = max_x
+        if new_y >= max_y:
+            new_y = max_y
 
         # Cambiamos posición y rotamos al objeto/persona
         vrep.simxSetObjectPosition(
