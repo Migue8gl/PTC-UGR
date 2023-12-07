@@ -118,17 +118,17 @@ def capture():
                 capture_parameters['lower_bound'] = parameters.get_far()
                 capture_parameters['upper_bound'] = parameters.get_far()+1
                 
-            if 'dePie' in selected_file:
+            if 'enPie' in selected_file:
                 capture_parameters['entity'] = 'Bill#0'
-            elif 'sentado':
+            elif 'sentado' in selected_file:
                 capture_parameters['entity'] = 'Bill'
-            elif 'cilindroMenor':
+            elif 'cilindroMenor' in selected_file:
                 capture_parameters['entity'] = 'Cylinder2'
             else:
                 capture_parameters['entity'] = 'Cylinder'
 
             capturar.capture(**capture_parameters)
-            print('Captura de datos para: {} completada'.format(selected_file))
+            tk.messagebox.showinfo(title, message='Captura de datos para: {} completada'.format(selected_file))
 
             # Actualizamos el estado de ficheros seleccionados
             selected_files_boolean[items.index(selected_file)] = True

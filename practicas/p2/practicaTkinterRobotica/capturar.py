@@ -24,8 +24,8 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
     _, camhandle = vrep.simxGetObjectHandle(
         clientID, 'Vision_sensor', vrep.simx_opmode_oneshot_wait)
 
-    # Obtenermos la referencia a la persona sentada Bill para moverla
-    _, personhandle = vrep.simxGetObjectHandle(
+    # Obtenermos la referencia a la entidad
+    _, entityhandle = vrep.simxGetObjectHandle(
         clientID, entity, vrep.simx_opmode_oneshot_wait)
 
     # Acceder a los datos del laser
@@ -57,10 +57,10 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
         puntos_z = []
 
         # Obtenemos la posición de la persona
-        _, person_position = vrep.simxGetObjectPosition(
-            clientID, personhandle, -1, vrep.simx_opmode_oneshot_wait)
-        _, person_orientation = vrep.simxGetObjectOrientation(
-            clientID, personhandle, -1, vrep.simx_opmode_oneshot_wait)
+        _, entity_position = vrep.simxGetObjectPosition(
+            clientID, entityhandle, -1, vrep.simx_opmode_oneshot_wait)
+        _, entity_orientation = vrep.simxGetObjectOrientation(
+            clientID, entityhandle, -1, vrep.simx_opmode_oneshot_wait)
 
         # Obtenemos la posición del robot
         _, robot_position = vrep.simxGetObjectPosition(
@@ -74,8 +74,8 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
 
         # Controlamos el movimiento
         if change_direction:
-            new_x = person_position[0] + movement_step + random_step_x
-            new_y = person_position[1] - movement_step - random_step_y
+            new_x = entity_position[0] + movement_step + random_step_x
+            new_y = entity_position[1] - movement_step - random_step_y
             new_distance_to_person = math.sqrt(new_x**2 + new_y**2)
 
             if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
@@ -83,8 +83,8 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
                 new_x = lower_bound + random_step_x
 
         else:
-            new_x = person_position[0] + movement_step + random_step_x
-            new_y = person_position[1] + movement_step + random_step_y
+            new_x = entity_position[0] + movement_step + random_step_x
+            new_y = entity_position[1] + movement_step + random_step_y
             new_distance_to_person = math.sqrt(new_x**2 + new_y**2)
 
             if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
@@ -93,11 +93,11 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
 
         # Cambiamos posición y rotamos al objeto/persona
         vrep.simxSetObjectPosition(
-            clientID, personhandle, -1, [new_x, new_y, person_position[2]], vrep.simx_opmode_oneshot_wait)
-        new_orientation = [person_orientation[0],
-                           person_orientation[1], person_orientation[2] + rotation_step]
+            clientID, entityhandle, -1, [new_x, new_y, entity_position[2]], vrep.simx_opmode_oneshot_wait)
+        new_orientation = [entity_orientation[0],
+                           entity_orientation[1], entity_orientation[2] + rotation_step]
         vrep.simxSetObjectOrientation(
-            clientID, personhandle, -1, new_orientation, vrep.simx_opmode_oneshot_wait)
+            clientID, entityhandle, -1, new_orientation, vrep.simx_opmode_oneshot_wait)
 
         _, signal_value = vrep.simxGetStringSignal(
             clientID, 'LaserData', vrep.simx_opmode_buffer)
