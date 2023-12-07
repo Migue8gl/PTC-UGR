@@ -15,7 +15,7 @@ import math
 import random
 
 
-def capture(clientID, file, iterations, lower_bound, upper_bound):
+def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
     # Guardar la referencia al robot
     _, robothandle = vrep.simxGetObjectHandle(
         clientID, 'Pioneer_p3dx', vrep.simx_opmode_oneshot_wait)
@@ -26,7 +26,7 @@ def capture(clientID, file, iterations, lower_bound, upper_bound):
 
     # Obtenermos la referencia a la persona sentada Bill para moverla
     _, personhandle = vrep.simxGetObjectHandle(
-        clientID, 'Bill#0', vrep.simx_opmode_oneshot_wait)
+        clientID, entity, vrep.simx_opmode_oneshot_wait)
 
     # Acceder a los datos del laser
     _, datosLaserComp = vrep.simxGetStringSignal(
@@ -78,7 +78,7 @@ def capture(clientID, file, iterations, lower_bound, upper_bound):
             new_y = person_position[1] - movement_step - random_step_y
             new_distance_to_person = math.sqrt(new_x**2 + new_y**2)
 
-            if lower_bound > new_distance_to_person or new_distance_to_person >= upper_bound:
+            if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
                 change_direction = False
                 new_x = lower_bound + random_step_x
 
@@ -87,7 +87,7 @@ def capture(clientID, file, iterations, lower_bound, upper_bound):
             new_y = person_position[1] + movement_step + random_step_y
             new_distance_to_person = math.sqrt(new_x**2 + new_y**2)
 
-            if lower_bound > new_distance_to_person or new_distance_to_person >= upper_bound:
+            if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
                 change_direction = True
                 new_x = lower_bound + random_step_x
 

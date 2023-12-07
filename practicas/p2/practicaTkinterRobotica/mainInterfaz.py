@@ -101,9 +101,12 @@ def capture():
 
             # Obtenemos los límites por los que debe moverse el personaje/objeto
             capture_parameters = {
+                'clientID': clientID,
                 'iterations': parameters.get_iterations(),
+                'file': selected_file,
                 'lower_bound': parameters.get_near(),
-                'upper_bound': parameters.get_medium()}
+                'upper_bound': parameters.get_medium(),
+                'entity': 'Bill#0'}
 
             if 'Cerca' in selected_file:
                 capture_parameters['lower_bound'] = parameters.get_near()
@@ -114,9 +117,17 @@ def capture():
             else:
                 capture_parameters['lower_bound'] = parameters.get_far()
                 capture_parameters['upper_bound'] = parameters.get_far()+1
+                
+            if 'dePie' in selected_file:
+                capture_parameters['entity'] = 'Bill#0'
+            elif 'sentado':
+                capture_parameters['entity'] = 'Bill'
+            elif 'cilindroMenor':
+                capture_parameters['entity'] = 'Cylinder2'
+            else:
+                capture_parameters['entity'] = 'Cylinder'
 
-            capturar.capture(
-                clientID, selected_file, **capture_parameters)
+            capturar.capture(**capture_parameters)
             print('Captura de datos para: {} completada'.format(selected_file))
 
             # Actualizamos el estado de ficheros seleccionados
