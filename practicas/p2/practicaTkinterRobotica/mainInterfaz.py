@@ -158,7 +158,7 @@ def group():
     # Llamamos a la funcionalidad principal
     agrupar.group(**group_parameters)
     msg = 'Agrupamiento en clusters completado. Se han creado los archivos: {}, {}'.format(group_parameters['json_names'][0],
-                                                                                            group_parameters['json_names'][1])
+                                                                                           group_parameters['json_names'][1])
     tk.messagebox.showinfo(title, message=msg)
     extract_features_button.config(state=tk.NORMAL)
 
@@ -171,10 +171,9 @@ def extract_features():
 
     caracteristicas.extract_features(**extract_features_parameters)
     msg = 'Extracción de características completado. Se han creado los archivos: {}, {}'.format(extract_features_parameters['data_names'][0],
-                                                                                                 extract_features_parameters['data_names'][1])
+                                                                                                extract_features_parameters['data_names'][1])
     tk.messagebox.showinfo(title, message=msg)
     train_classifier_button.config(state=tk.NORMAL)
-    pass
 
 
 def train_classifier():
@@ -217,7 +216,8 @@ def change_parameters():
     # Crear un objeto Parameters con valores enteros
     parameters = Parameters(iterations, near, medium,
                             far, min_points, max_points, distance_threshold)
-    print(parameters)
+    message = f"Parámetros cambiados:\n{parameters}"
+    tk.messagebox.showinfo("Cambios de Parámetros", message)
 
 
 def validate_numeric_input(value, name):
