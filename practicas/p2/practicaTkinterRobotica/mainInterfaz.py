@@ -10,6 +10,7 @@ import tkinter as tk
 import vrep
 from parameters import Parameters
 import capturar
+import agrupar
 import os
 
 # -------------- GLOBAL VALUES ------------- #
@@ -41,17 +42,17 @@ def start_vrep():
 
     if clientID != -1:
         tk.messagebox.showinfo(
-            title=title, message='Ya está conectado a VREP')
+            title=title, message='Ya está conectado a VREP.')
     else:
         vrep.simxFinish(-1)
         clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
 
         if clientID == -1:
-            tk.messagebox.showerror(title, message='Debe iniciar el simulador')
+            tk.messagebox.showerror(title, message='Debe iniciar el simulador.')
         else:
             tk.messagebox.showinfo(
-                title=title, message='Conexión con VREP establecida')
-            status_text.set('Estado: Conectado a VREP')
+                title=title, message='Conexión con VREP establecida.')
+            status_text.set('Estado: Conectado a VREP.')
             exit_vrep_button.config(state=tk.NORMAL)
             capture_button.config(state=tk.NORMAL)
 
@@ -128,7 +129,7 @@ def capture():
                 capture_parameters['entity'] = 'Cylinder'
 
             capturar.capture(**capture_parameters)
-            tk.messagebox.showinfo(title, message='Captura de datos para: {} completada'.format(selected_file))
+            tk.messagebox.showinfo(title, message='Captura de datos para: {} completada.'.format(selected_file))
 
             # Actualizamos el estado de ficheros seleccionados
             selected_files_boolean[items.index(selected_file)] = True
@@ -139,13 +140,21 @@ def capture():
     else:
         # Si no se ha seleccionado ningún archivo
         tk.messagebox.showwarning(
-            title=title, message="Debe elegir algún fichero de la lista")
+            title=title, message="Debe elegir algún fichero de la lista.")
 
 
 def group():
+    # Parámetros de función de agrupación
+    group_parameters = {
+        'files': items,
+        'min_points': parameters.get_min_points(),
+        'max_points': parameters.get_max_points(),
+        'distance_threshold': parameters.get_distance_threshold()}
+    
+    # Llamamos a la funcionalidad principal
+    agrupar.group(**group_parameters)
+    tk.messagebox.showinfo(title, message='Agrupamiento en clusters completado.')
     extract_features_button.config(state=tk.NORMAL)
-    pass
-
 
 def extract_features():
     train_classifier_button.config(state=tk.NORMAL)
@@ -155,6 +164,11 @@ def extract_features():
 def train_classifier():
     pass
 
+def debug():
+    capture_button.config(state=tk.NORMAL)
+    group_button.config(state=tk.NORMAL)
+    extract_features_button.config(state=tk.NORMAL)
+    train_classifier_button.config(state=tk.NORMAL)
 
 def exit_window():
     if clientID != -1:
@@ -192,7 +206,7 @@ def validate_numeric_input(value, name):
         return True
     except ValueError:
         tk.messagebox.showwarning(
-            title, message='Se debe introducir un número')
+            title, message='Se debe introducir un número.')
         return False
 
 
@@ -204,7 +218,7 @@ root.geometry('700x300')
 
 # ------------- FIRST COLUMN ------------ #
 
-label = tk.Label(root, text='Es necesario ejecutar el simulador VREP')
+label = tk.Label(root, text='Es necesario ejecutar el simulador VREP.')
 label.grid(row=0, column=0)
 
 start_vrep_button = tk.Button(
@@ -243,6 +257,10 @@ train_classifier_button.grid(row=7, column=0)
 exit_window_button = tk.Button(
     root, text='Salir', command=exit_window)
 exit_window_button.grid(row=8, column=0)
+
+debug_button = tk.Button(
+    root, text='Debug', command=debug)
+debug_button.grid(row=9, column=0)
 
 # ------------ SECOND COLUMN ------------ #
 
