@@ -16,6 +16,20 @@ import random
 
 
 def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
+    """
+   Captura datos del sensor láser y la posición de un objeto/persona en un entorno V-REP.
+
+   Parámetros:
+   - clientID: Identificación del cliente V-REP.
+   - file: Nombre del archivo donde se guardarán los datos capturados.
+   - iterations: Número de iteraciones para capturar datos.
+   - lower_bound: Límite inferior de distancia para cambiar la dirección de movimiento.
+   - upper_bound: Límite superior de distancia para cambiar la dirección de movimiento.
+   - entity: Nombre de la entidad (objeto/persona) en el entorno V-REP.
+
+   Retorna:
+   - No retorna nada, pero guarda los datos capturados en un archivo JSON y las imágenes en formato JPG.
+   """
     # Guardar la referencia al robot
     _, robothandle = vrep.simxGetObjectHandle(
         clientID, 'Pioneer_p3dx', vrep.simx_opmode_oneshot_wait)

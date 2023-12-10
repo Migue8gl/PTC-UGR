@@ -12,6 +12,15 @@ import numpy as np
 
 
 def get_data(file):
+    """
+    Lee un archivo JSON y devuelve los datos como una lista de puntos.
+
+    Parámetros:
+    - file: Nombre del archivo JSON.
+
+    Retorna:
+    - Lista de puntos [PuntosX, PuntosY].
+    """
     data = []
     with open(file, 'r') as f:
         for line in f:
@@ -20,6 +29,15 @@ def get_data(file):
 
 
 def read_files(files):
+    """
+    Lee varios archivos JSON y combina los datos en una lista.
+
+    Parámetros:
+    - files: Lista de nombres de archivos JSON.
+
+    Retorna:
+    - Lista combinada de puntos [PuntosX, PuntosY].
+    """
     data = []
     for file in files:
         data += get_data(file)
@@ -27,6 +45,16 @@ def read_files(files):
 
 
 def euclidean_distance(point1, point2):
+    """
+    Calcula la distancia euclidiana entre dos puntos.
+
+    Parámetros:
+    - point1: Primer punto en formato [x, y].
+    - point2: Segundo punto en formato [x, y].
+
+    Retorna:
+    - Distancia euclidiana entre los dos puntos.
+    """
     # Los puntos deben tener misma dimensionalidad
     if len(point1) != len(point2):
         raise ValueError("Los puntos deben ser de igual dimensionalidad")
@@ -37,6 +65,18 @@ def euclidean_distance(point1, point2):
 
 
 def create_clusters(data_points, min_points, max_points, distance_threshold):
+    """file_name
+    Agrupa los puntos en clusters basándose en la distancia y el número de puntos.
+
+    Parámetros:
+    - data_points: Lista de puntos [PuntosX, PuntosY].
+    - min_points: Número mínimo de puntos por cluster.
+    - max_points: Número máximo de puntos por cluster.
+    - distance_threshold: Umbral de distancia para agrupar puntos en un cluster.
+
+    Retorna:
+    - Lista de clusters, donde cada cluster es una lista de puntos [PuntosX, PuntosY].
+    """
     clusters = []
     cluster = []
     for points in data_points:
@@ -58,6 +98,16 @@ def create_clusters(data_points, min_points, max_points, distance_threshold):
 
 
 def clusters_to_json(clusters, file_name):
+    """
+    Guarda los clusters en un archivo JSON.
+
+    Parámetros:
+    - clusters: Lista de clusters.
+    - file_name: Nombre del archivo JSON de salida.
+
+    Retorna:
+    - No retorna nada, pero guarda los clusters en un archivo JSON.
+    """
     # Abro el archivo
     with open(file_name, 'w') as f:
         # Cada cluster es una línea del json
@@ -75,7 +125,20 @@ def clusters_to_json(clusters, file_name):
             f.write(json.dumps(clusters_json)+'\n')
 
 
-def group(files, min_points, max_points, distance_threshold):
+def group(files, json_names, min_points, max_points, distance_threshold):
+    """
+    Agrupa los puntos de archivos positivos y negativos en clusters y guarda los resultados en archivos JSON separados.
+
+    Parámetros:
+    - files: Lista de nombres de archivos.
+    - json_names: Lista de nombres para los json finales.
+    - min_points: Número mínimo de puntos por cluster.
+    - max_points: Número máximo de puntos por cluster.
+    - distance_threshold: Umbral de distancia para agrupar puntos en un cluster.
+
+    Retorna:
+    - No retorna nada, pero guarda los clusters en archivos JSON.
+    """
     positive_files = [item for item in files if 'positivo' in item]
     negative_files = [item for item in files if 'negativo' in item]
 
@@ -87,8 +150,8 @@ def group(files, min_points, max_points, distance_threshold):
         positive_data, min_points, max_points, distance_threshold)
 
     # Pasamos los clusters a json
-    clusters_to_json(positive_clusters, 'clustersPiernas.json')
-    
+    clusters_to_json(positive_clusters, json_names[0])
+
     # Leemos los datos de todos los archivos negativos
     negative_data = read_files(negative_files)
 
@@ -97,4 +160,4 @@ def group(files, min_points, max_points, distance_threshold):
         negative_data, min_points, max_points, distance_threshold)
 
     # Pasamos los clusters a json
-    clusters_to_json(negative_clusters, 'clustersNoPiernas.json')
+    clusters_to_json(negative_clusters, json_names[1])

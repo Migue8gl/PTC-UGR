@@ -11,6 +11,7 @@ import vrep
 from parameters import Parameters
 import capturar
 import agrupar
+import caracteristicas
 import os
 
 # -------------- GLOBAL VALUES ------------- #
@@ -149,6 +150,7 @@ def group():
     # Parámetros de función de agrupación
     group_parameters = {
         'files': items,
+        'json_names': ('clustersPiernas.json', 'clustersNoPiernas.json'),
         'min_points': parameters.get_min_points(),
         'max_points': parameters.get_max_points(),
         'distance_threshold': parameters.get_distance_threshold()}
@@ -161,6 +163,12 @@ def group():
 
 
 def extract_features():
+    # Parámetros de función de agrupación
+    extract_features_parameters = {
+        'files': ('clustersPiernas.json', 'clustersNoPiernas.json'),
+        'data_names': ('caracteristicasPiernas.dat', 'caracteristicasNoPiernas.dat')}
+
+    caracteristicas.extract_features(**extract_features_parameters)
     train_classifier_button.config(state=tk.NORMAL)
     pass
 
