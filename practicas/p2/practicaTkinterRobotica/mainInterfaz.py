@@ -48,7 +48,8 @@ def start_vrep():
         clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
 
         if clientID == -1:
-            tk.messagebox.showerror(title, message='Debe iniciar el simulador.')
+            tk.messagebox.showerror(
+                title, message='Debe iniciar el simulador.')
         else:
             tk.messagebox.showinfo(
                 title=title, message='Conexión con VREP establecida.')
@@ -118,7 +119,7 @@ def capture():
             else:
                 capture_parameters['lower_bound'] = parameters.get_far()
                 capture_parameters['upper_bound'] = parameters.get_far()+1
-                
+
             if 'enPie' in selected_file:
                 capture_parameters['entity'] = 'Bill#0'
             elif 'sentado' in selected_file:
@@ -129,7 +130,8 @@ def capture():
                 capture_parameters['entity'] = 'Cylinder'
 
             capturar.capture(**capture_parameters)
-            tk.messagebox.showinfo(title, message='Captura de datos para: {} completada.'.format(selected_file))
+            tk.messagebox.showinfo(
+                title, message='Captura de datos para: {} completada.'.format(selected_file))
 
             # Actualizamos el estado de ficheros seleccionados
             selected_files_boolean[items.index(selected_file)] = True
@@ -150,11 +152,13 @@ def group():
         'min_points': parameters.get_min_points(),
         'max_points': parameters.get_max_points(),
         'distance_threshold': parameters.get_distance_threshold()}
-    
+
     # Llamamos a la funcionalidad principal
     agrupar.group(**group_parameters)
-    tk.messagebox.showinfo(title, message='Agrupamiento en clusters completado.')
+    tk.messagebox.showinfo(
+        title, message='Agrupamiento en clusters completado.')
     extract_features_button.config(state=tk.NORMAL)
+
 
 def extract_features():
     train_classifier_button.config(state=tk.NORMAL)
@@ -164,11 +168,17 @@ def extract_features():
 def train_classifier():
     pass
 
+
 def debug():
-    capture_button.config(state=tk.NORMAL)
-    group_button.config(state=tk.NORMAL)
-    extract_features_button.config(state=tk.NORMAL)
-    train_classifier_button.config(state=tk.NORMAL)
+    current_state = capture_button.cget("state")
+
+    new_state = tk.NORMAL if current_state == tk.DISABLED else tk.DISABLED
+
+    capture_button.config(state=new_state)
+    group_button.config(state=new_state)
+    extract_features_button.config(state=new_state)
+    train_classifier_button.config(state=new_state)
+
 
 def exit_window():
     if clientID != -1:
