@@ -157,8 +157,9 @@ def group():
 
     # Llamamos a la funcionalidad principal
     agrupar.group(**group_parameters)
-    tk.messagebox.showinfo(
-        title, message='Agrupamiento en clusters completado.')
+    msg = 'Agrupamiento en clusters completado. Se han creado los archivos: {}, {}'.format(group_parameters['json_names'][0],
+                                                                                            group_parameters['json_names'][1])
+    tk.messagebox.showinfo(title, message=msg)
     extract_features_button.config(state=tk.NORMAL)
 
 
@@ -169,6 +170,9 @@ def extract_features():
         'data_names': ('caracteristicasPiernas.dat', 'caracteristicasNoPiernas.dat')}
 
     caracteristicas.extract_features(**extract_features_parameters)
+    msg = 'Extracción de características completado. Se han creado los archivos: {}, {}'.format(extract_features_parameters['data_names'][0],
+                                                                                                 extract_features_parameters['data_names'][1])
+    tk.messagebox.showinfo(title, message=msg)
     train_classifier_button.config(state=tk.NORMAL)
     pass
 

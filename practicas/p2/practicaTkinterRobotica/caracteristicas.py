@@ -105,6 +105,24 @@ def point_to_line_distance(point, line_start, line_end):
 
 
 def extract_features(files, data_names):
+    """
+    Extrae características de archivos de entrada y guarda los resultados en archivos de salida.
+
+    Parámetros:
+    - files: Lista de nombres de archivos de entrada.
+    - data_names: Lista de nombres de archivos de salida correspondientes.
+
+    La función recorre los archivos de entrada, calcula características para cada cluster y guarda los resultados
+    en archivos de salida. Cada línea en los archivos de salida contiene un diccionario JSON con las siguientes propiedades:
+
+    - 'numero_cluster': Número de cluster.
+    - 'perimetro': Perímetro del polígono representado por el cluster.
+    - 'profundidad': Profundidad del polígono representado por el cluster.
+    - 'anchura': Anchura del polígono representado por el cluster.
+    - 'esPierna': Valor binario (1 o 0) que indica si el cluster es una pierna (1) o no (0).
+
+    Nota: La función utiliza las funciones auxiliares euclidean_distance, perimeter, depth, width y point_to_line_distance.
+    """
     # Recorro los archivos para extraer las características de cada cluster
     for i, file in enumerate(files):
         # Abro el archivo de salida
