@@ -167,11 +167,15 @@ def extract_features():
     # Parámetros de función de agrupación
     extract_features_parameters = {
         'files': ('clustersPiernas.json', 'clustersNoPiernas.json'),
-        'data_names': ('caracteristicasPiernas.dat', 'caracteristicasNoPiernas.dat')}
+        'data_names': ('caracteristicasPiernas.dat', 'caracteristicasNoPiernas.dat',
+                       'piernasDataset.csv')}
 
     caracteristicas.extract_features(**extract_features_parameters)
-    msg = 'Extracción de características completado. Se han creado los archivos: {}, {}'.format(extract_features_parameters['data_names'][0],
-                                                                                                extract_features_parameters['data_names'][1])
+    msg = 'Extracción de características completado. Se han creado los archivos: {}, {}, {}'.format(extract_features_parameters['data_names'][0],
+                                                                                                    extract_features_parameters[
+                                                                                                        'data_names'][1],
+
+                                                                                                    extract_features_parameters['data_names'][2])
     tk.messagebox.showinfo(title, message=msg)
     train_classifier_button.config(state=tk.NORMAL)
 

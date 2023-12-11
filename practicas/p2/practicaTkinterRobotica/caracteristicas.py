@@ -104,6 +104,17 @@ def point_to_line_distance(point, line_start, line_end):
     return numerator / denominator
 
 
+def generate_dataset(output_file, files):
+    with open(output_file, 'w') as output:
+        for file in reversed(files):
+            with open(file, 'r') as f:
+                for line in f:
+                    line_dict = json.loads(line)
+                    output.write('{},{},{},{}\n'.format(
+                        line_dict['perimetro'], line_dict['profundidad'],
+                        line_dict['anchura'], line_dict['esPierna']))
+
+
 def extract_features(files, data_names):
     """
     Extrae características de archivos de entrada y guarda los resultados en archivos de salida.
@@ -141,3 +152,4 @@ def extract_features(files, data_names):
                                      'anchura': width(points),
                                      'esPierna': 1 if i == 0 else 0}
                     output.write(json.dumps(features_json)+'\n')
+    generate_dataset(data_names[-1], data_names)
