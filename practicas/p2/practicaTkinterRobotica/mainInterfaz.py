@@ -12,6 +12,7 @@ from parameters import Parameters
 import capturar
 import agrupar
 import caracteristicas
+import clasificarSVM
 import os
 
 # -------------- GLOBAL VALUES ------------- #
@@ -70,6 +71,7 @@ def exit_vrep():
     group_button.config(state=tk.DISABLED)
     extract_features_button.config(state=tk.DISABLED)
     train_classifier_button.config(state=tk.DISABLED)
+    predict_button.config(state=tk.DISABLED)
 
 
 def capture():
@@ -181,6 +183,15 @@ def extract_features():
 
 
 def train_classifier():
+    train_classifier_parameters = {'dataset': 'piernasDataset.csv'}
+    clasificarSVM.train_classifier(**train_classifier_parameters)
+
+    msg = 'Entrenamiento del clasificador completado.'
+    tk.messagebox.showinfo(title, message=msg)
+    predict_button.config(state=tk.NORMAL)
+
+
+def predict():
     pass
 
 
@@ -189,10 +200,12 @@ def debug():
 
     new_state = tk.NORMAL if current_state == tk.DISABLED else tk.DISABLED
 
+    exit_vrep_button.config(state=new_state)
     capture_button.config(state=new_state)
     group_button.config(state=new_state)
     extract_features_button.config(state=new_state)
     train_classifier_button.config(state=new_state)
+    predict_button.config(state=new_state)
 
 
 def exit_window():
@@ -280,13 +293,17 @@ train_classifier_button = tk.Button(
     root, text='Entrenar clasificador', state=tk.DISABLED, command=train_classifier)
 train_classifier_button.grid(row=7, column=0)
 
+predict_button = tk.Button(
+    root, text='Predecir', state=tk.DISABLED, command=predict)
+predict_button.grid(row=8, column=0)
+
 exit_window_button = tk.Button(
     root, text='Salir', command=exit_window)
-exit_window_button.grid(row=8, column=0)
+exit_window_button.grid(row=9, column=0)
 
 debug_button = tk.Button(
     root, text='Debug', command=debug)
-debug_button.grid(row=9, column=0)
+debug_button.grid(row=10, column=0)
 
 # ------------ SECOND COLUMN ------------ #
 
