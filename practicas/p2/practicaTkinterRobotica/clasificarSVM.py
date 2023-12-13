@@ -36,10 +36,14 @@ def train_classifier(dataset):
         # Separamos las características de la etiqueta que nos dices a la clase que corresponde
         x = data.iloc[:, :-1]
         y = data.iloc[:, -1]
+        
+        medias = np.average(x, axis=0) # Media de cada característica
+        desv_tipicas = np.std(x, axis=0) # Desviación típica de cada característica
+        x = (x - medias) / desv_tipicas # dataset normalizado
 
         # Dividimos en conjuntos de entrenamiento y de test
         x_train, x_test, y_train, y_test = train_test_split(
-            x, y, test_size=0.20, random_state=25)
+            x, y, test_size=0.2, random_state=25)
 
         print("Clasificación con kernek Lineal")
         svcLineal = SVC(kernel='linear')

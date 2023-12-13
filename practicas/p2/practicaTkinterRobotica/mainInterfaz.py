@@ -130,7 +130,7 @@ def capture():
             elif 'cilindroMenor' in selected_file:
                 capture_parameters['entity'] = 'Cylinder2'
             else:
-                capture_parameters['entity'] = 'Cylinder'
+                capture_parameters['entity'] = 'Cylinder0'
 
             capturar.capture(**capture_parameters)
             tk.messagebox.showinfo(
