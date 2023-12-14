@@ -13,6 +13,7 @@ import capturar
 import agrupar
 import caracteristicas
 import clasificarSVM
+import predecir
 import os
 
 # -------------- GLOBAL VALUES ------------- #
@@ -193,7 +194,12 @@ def train_classifier():
 
 
 def predict():
-    pass
+    global clientID, parameters
+    predict_parameters = {'clientID': clientID,
+                          'parameters': parameters}
+    predecir.predict(**predict_parameters)
+    msg = 'Predicción completada.'
+    tk.messagebox.showinfo(title, message=msg)
 
 
 def debug():

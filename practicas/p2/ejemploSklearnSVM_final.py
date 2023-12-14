@@ -317,7 +317,10 @@ caracteristicas=np.array([ [7.0,3.2,4.7,1.4],
 carDataF=pd.DataFrame(caracteristicas)
 
 # hacemos la prediccion
-
+def train_classifier(x_train, y_train, x_test, y_test, kernel):
+    svc = SVC(kernel=kernel)
+    svc.fit(x_train, y_train)
+    return svc.predict(x_test), svc
 prediccion=clasificador.predict(carDataF)
 
 print("Prediccion con Iris-versicolor es", prediccion)
