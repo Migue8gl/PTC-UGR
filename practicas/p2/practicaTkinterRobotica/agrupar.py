@@ -9,6 +9,7 @@ Created on Thu Dec  7 20:16:08 2023
 import json
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def get_data(file):
@@ -96,6 +97,17 @@ def create_clusters(data_points, min_points, max_points, distance_threshold):
                 cluster = []
     return clusters
 
+def visualize_clusters(clusters, plot_name='clusters'):
+    plt.figure()
+    for cluster in clusters:
+       cluster_x, cluster_y = zip(*cluster)
+       plt.scatter(cluster_x, cluster_y)
+       
+    plt.xlabel('X-axis')
+    plt.ylabel('Y-axis')
+    plt.title('Cluster Visualization')
+    plt.savefig(plot_name)
+
 
 def clusters_to_json(clusters, file_name):
     """
@@ -148,6 +160,9 @@ def group(files, json_names, min_points, max_points, distance_threshold):
     # Creamos los clusters positivos
     positive_clusters = create_clusters(
         positive_data, min_points, max_points, distance_threshold)
+    
+    # Guardamos un plot de visualización
+    visualize_clusters(positive_clusters, 'Clusters positivos')
 
     # Pasamos los clusters a json
     clusters_to_json(positive_clusters, json_names[0])
@@ -158,6 +173,9 @@ def group(files, json_names, min_points, max_points, distance_threshold):
     # Creamos los clusters positivos
     negative_clusters = create_clusters(
         negative_data, min_points, max_points, distance_threshold)
+    
+    # Guardamos un plot de visualización
+    visualize_clusters(negative_clusters, 'Clusters negativos')
 
     # Pasamos los clusters a json
     clusters_to_json(negative_clusters, json_names[1])

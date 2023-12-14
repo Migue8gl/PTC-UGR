@@ -9,7 +9,7 @@ Created on Mon Dec 4 12:28:18 2023
 
 class Parameters:
     def __init__(self, iterations=50, near=0.5, medium=1.5, far=2.5,
-                 min_points=3, max_points=32, distance_threshold=0.05):
+                 min_points=3, max_points=79, distance_threshold=0.05):
         self._iterations = iterations
         self._near = near
         self._medium = medium

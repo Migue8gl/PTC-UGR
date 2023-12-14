@@ -75,6 +75,7 @@ def exit_vrep():
 
 
 def capture():
+    global selected_files_boolean
     selected_files = file_list.curselection()
 
     # Si un archivo ha sido seleccionado
@@ -184,7 +185,7 @@ def extract_features():
 
 def train_classifier():
     train_classifier_parameters = {'dataset': 'piernasDataset.csv'}
-    clasificarSVM.train_classifier(**train_classifier_parameters)
+    clasificarSVM.train(**train_classifier_parameters)
 
     msg = 'Entrenamiento del clasificador completado.'
     tk.messagebox.showinfo(title, message=msg)
