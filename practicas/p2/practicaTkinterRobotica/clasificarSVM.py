@@ -7,15 +7,12 @@ Created on Mon Dec 11 17:55:07 2023
 """
 
 import numpy as np
-import sys
-import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import ShuffleSplit
 from sklearn.model_selection import GridSearchCV
 import pickle
 
@@ -33,12 +30,13 @@ def scale_data(data):
 
 
 def read_data(dataset):
-    return pd.read_csv(dataset)
+    feature_names = ['perimeter', 'depth', 'width', 'class']
+    return pd.read_csv(dataset, names=feature_names)
 
 
 def split_data(data):
-    x = data.iloc[:, :-1]
-    y = data.iloc[:, -1]
+    x = data.drop('class', axis=1)
+    y = data['class']
     return x, y
 
 
@@ -109,14 +107,14 @@ def train(dataset):
             message += evaluate_classifier(y_test, y_pred)
             message += cross_validate_classifier(svc, data, y)
 
-            # Linear SVM
+            # Polinomico SVM
             message += "Clasificación con kernel Polinómico\n"
             y_pred, svc = train_classifier(
                 x_train, y_train, x_test, y_test, 'poly')
             message += evaluate_classifier(y_test, y_pred)
             message += cross_validate_classifier(svc, data, y)
 
-            # Linear SVM
+            # Radial SVM
             message += "Clasificación con kernel RBF\n"
             y_pred, svc = train_classifier(
                 x_train, y_train, x_test, y_test, 'rbf')
@@ -129,13 +127,13 @@ def train(dataset):
                       'gamma': [0.001, 0.005, 0.01, 0.1]}
 
             message += 'Búsqueda de hiperparámetros para SVM con RBF\n'
-            y_pred, svc = train_classifier_hyperparameter_search(
+            y_pred, best_svc = train_classifier_hyperparameter_search(
                 x_train, y_train, x_test, y_test, 'rbf', params)
             message += evaluate_classifier(y_test, y_pred)
-            message += cross_validate_classifier(svc, data, y)
+            message += cross_validate_classifier(best_svc, data, y)
 
         # Guardamos el último clasificador (que es el SVM-RBF con búsqueda
         # de hiperparámetros)
         with open("clasificador.pkl", "wb") as archivo:
-            pickle.dump(svc, archivo)
+            pickle.dump(best_svc, archivo)
         file.write(message)

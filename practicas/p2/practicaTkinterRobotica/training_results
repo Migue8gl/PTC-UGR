@@ -1,148 +1,148 @@
 
 ------ DATOS SIN ESCALAR ------
 Clasificación con kernel Lineal
-Acc_test: (TP+TN)/(T+P)  0.7912
+Acc_test: (TP+TN)/(T+P)  0.7500
 Matriz de confusión Filas: verdad Columnas: predicción
-[[59 28]
- [10 85]]
+[[ 61  52]
+ [  3 104]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       0.86      0.68      0.76        87
-           1       0.75      0.89      0.82        95
+           0       0.95      0.54      0.69       113
+           1       0.67      0.97      0.79       107
 
-    accuracy                           0.79       182
-   macro avg       0.80      0.79      0.79       182
-weighted avg       0.80      0.79      0.79       182
+    accuracy                           0.75       220
+   macro avg       0.81      0.76      0.74       220
+weighted avg       0.81      0.75      0.74       220
 
-Accuracy 5-cross validation: 0.7757 (+/- 0.2696)
+Accuracy 5-cross validation: 0.7098 (+/- 0.3202)
 #----------------------------------------------#
 Clasificación con kernel Polinómico
-Acc_test: (TP+TN)/(T+P)  0.7418
+Acc_test: (TP+TN)/(T+P)  0.6909
 Matriz de confusión Filas: verdad Columnas: predicción
-[[41 46]
- [ 1 94]]
+[[ 47  66]
+ [  2 105]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       0.98      0.47      0.64        87
-           1       0.67      0.99      0.80        95
+           0       0.96      0.42      0.58       113
+           1       0.61      0.98      0.76       107
 
-    accuracy                           0.74       182
-   macro avg       0.82      0.73      0.72       182
-weighted avg       0.82      0.74      0.72       182
+    accuracy                           0.69       220
+   macro avg       0.79      0.70      0.67       220
+weighted avg       0.79      0.69      0.67       220
 
-Accuracy 5-cross validation: 0.7570 (+/- 0.3397)
+Accuracy 5-cross validation: 0.6680 (+/- 0.3529)
 #----------------------------------------------#
 Clasificación con kernel RBF
-Acc_test: (TP+TN)/(T+P)  0.8297
+Acc_test: (TP+TN)/(T+P)  0.8864
 Matriz de confusión Filas: verdad Columnas: predicción
-[[63 24]
- [ 7 88]]
+[[99 14]
+ [11 96]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       0.90      0.72      0.80        87
-           1       0.79      0.93      0.85        95
+           0       0.90      0.88      0.89       113
+           1       0.87      0.90      0.88       107
 
-    accuracy                           0.83       182
-   macro avg       0.84      0.83      0.83       182
-weighted avg       0.84      0.83      0.83       182
+    accuracy                           0.89       220
+   macro avg       0.89      0.89      0.89       220
+weighted avg       0.89      0.89      0.89       220
 
-Accuracy 5-cross validation: 0.8164 (+/- 0.2984)
+Accuracy 5-cross validation: 0.8035 (+/- 0.2707)
 #----------------------------------------------#
 Búsqueda de hiperparámetros para SVM con RBF
-Acc_test: (TP+TN)/(T+P)  0.8242
+Acc_test: (TP+TN)/(T+P)  0.8045
 Matriz de confusión Filas: verdad Columnas: predicción
-[[61 26]
- [ 6 89]]
+[[ 73  40]
+ [  3 104]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       0.91      0.70      0.79        87
-           1       0.77      0.94      0.85        95
+           0       0.96      0.65      0.77       113
+           1       0.72      0.97      0.83       107
 
-    accuracy                           0.82       182
-   macro avg       0.84      0.82      0.82       182
-weighted avg       0.84      0.82      0.82       182
+    accuracy                           0.80       220
+   macro avg       0.84      0.81      0.80       220
+weighted avg       0.84      0.80      0.80       220
 
-Accuracy 5-cross validation: 0.7856 (+/- 0.3247)
+Accuracy 5-cross validation: 0.7297 (+/- 0.2855)
 #----------------------------------------------#
 
 ------ DATOS ESCALADOS ------
 Clasificación con kernel Lineal
-Acc_test: (TP+TN)/(T+P)  0.8242
+Acc_test: (TP+TN)/(T+P)  0.7909
 Matriz de confusión Filas: verdad Columnas: predicción
-[[61 26]
- [ 6 89]]
+[[ 71  42]
+ [  4 103]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       0.91      0.70      0.79        87
-           1       0.77      0.94      0.85        95
+           0       0.95      0.63      0.76       113
+           1       0.71      0.96      0.82       107
 
-    accuracy                           0.82       182
-   macro avg       0.84      0.82      0.82       182
-weighted avg       0.84      0.82      0.82       182
+    accuracy                           0.79       220
+   macro avg       0.83      0.80      0.79       220
+weighted avg       0.83      0.79      0.79       220
 
-Accuracy 5-cross validation: 0.7999 (+/- 0.2909)
+Accuracy 5-cross validation: 0.7808 (+/- 0.3414)
 #----------------------------------------------#
 Clasificación con kernel Polinómico
-Acc_test: (TP+TN)/(T+P)  0.7363
+Acc_test: (TP+TN)/(T+P)  0.6545
 Matriz de confusión Filas: verdad Columnas: predicción
-[[39 48]
- [ 0 95]]
+[[ 37  76]
+ [  0 107]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       1.00      0.45      0.62        87
-           1       0.66      1.00      0.80        95
+           0       1.00      0.33      0.49       113
+           1       0.58      1.00      0.74       107
 
-    accuracy                           0.74       182
-   macro avg       0.83      0.72      0.71       182
-weighted avg       0.82      0.74      0.71       182
+    accuracy                           0.65       220
+   macro avg       0.79      0.66      0.62       220
+weighted avg       0.80      0.65      0.61       220
 
-Accuracy 5-cross validation: 0.7239 (+/- 0.2854)
+Accuracy 5-cross validation: 0.6306 (+/- 0.3259)
 #----------------------------------------------#
 Clasificación con kernel RBF
-Acc_test: (TP+TN)/(T+P)  0.8516
+Acc_test: (TP+TN)/(T+P)  0.8909
 Matriz de confusión Filas: verdad Columnas: predicción
-[[66 21]
- [ 6 89]]
+[[103  10]
+ [ 14  93]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       0.92      0.76      0.83        87
-           1       0.81      0.94      0.87        95
+           0       0.88      0.91      0.90       113
+           1       0.90      0.87      0.89       107
 
-    accuracy                           0.85       182
-   macro avg       0.86      0.85      0.85       182
-weighted avg       0.86      0.85      0.85       182
+    accuracy                           0.89       220
+   macro avg       0.89      0.89      0.89       220
+weighted avg       0.89      0.89      0.89       220
 
-Accuracy 5-cross validation: 0.8296 (+/- 0.2958)
+Accuracy 5-cross validation: 0.8126 (+/- 0.2449)
 #----------------------------------------------#
 Búsqueda de hiperparámetros para SVM con RBF
-Acc_test: (TP+TN)/(T+P)  0.9451
+Acc_test: (TP+TN)/(T+P)  0.9500
 Matriz de confusión Filas: verdad Columnas: predicción
-[[79  8]
- [ 2 93]]
+[[110   3]
+ [  8  99]]
 Precision= TP / (TP + FP), Recall= TP / (TP + FN)
 f1-score es la media entre precisión y recall
               precision    recall  f1-score   support
 
-           0       0.98      0.91      0.94        87
-           1       0.92      0.98      0.95        95
+           0       0.93      0.97      0.95       113
+           1       0.97      0.93      0.95       107
 
-    accuracy                           0.95       182
-   macro avg       0.95      0.94      0.94       182
-weighted avg       0.95      0.95      0.94       182
+    accuracy                           0.95       220
+   macro avg       0.95      0.95      0.95       220
+weighted avg       0.95      0.95      0.95       220
 
-Accuracy 5-cross validation: 0.8681 (+/- 0.2715)
+Accuracy 5-cross validation: 0.8526 (+/- 0.2808)
 #----------------------------------------------#
