@@ -12,7 +12,6 @@ import pickle
 import pandas as pd
 from agrupar import create_clusters
 from caracteristicas import depth, width, perimeter
-from clasificarSVM import scale_data
 import matplotlib.pyplot as plt
 
 
@@ -56,8 +55,13 @@ def predict_data(data):
     # Pasamos a DataFrame
     feature_names = ['perimeter', 'depth', 'width']
     df = pd.DataFrame(data, columns=feature_names)
-
-    data = scale_data(df)
+    
+    with open('scaling_params.pkl', 'rb') as params_file:
+        scaling_params = pickle.load(params_file)
+        means = scaling_params['means']
+        std_deviations = scaling_params['std_deviations']
+        
+    data = (df - means) / std_deviations
 
     # Cargamos el clasificador
     with open('clasificador.pkl', 'rb') as file:
@@ -67,16 +71,14 @@ def predict_data(data):
 
 
 def visualize_clusters(clusters, predictions, plot_name='Predictions'):
-    plt.figure()
+    plt.figure(figsize=(7, 5))
     for i, cluster in enumerate(clusters):
         color = 'red' if predictions[i] == 1 else 'blue'
         cluster_x, cluster_y = zip(*cluster)
-        plt.scatter(cluster_x, cluster_y, c=color, s=1.2)
+        plt.scatter(cluster_x, cluster_y, c=color, s=10)
 
     plt.xlabel('X-axis')
     plt.ylabel('Y-axis')
-    plt.ylim(-2.4, 2.4)
-    plt.xlim(1.0, 4.0)
     plt.title('Cluster Visualization')
     plt.savefig(plot_name)
 

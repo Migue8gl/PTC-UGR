@@ -60,13 +60,16 @@ def euclidean_distance(point1, point2):
     if len(point1) != len(point2):
         raise ValueError("Los puntos deben ser de igual dimensionalidad")
 
-    # Calculate the Euclidean distance
-    distance = math.sqrt(sum((p1 - p2) ** 2 for p1, p2 in zip(point1, point2)))
+    # Calculamos distancia euclidia
+    sum = 0
+    for a1, a2 in zip(point1, point2):
+        sum += (a1 - a2) ** 2
+    distance = math.sqrt(sum)
     return distance
 
 
 def create_clusters(data_points, min_points, max_points, distance_threshold):
-    """file_name
+    """
     Agrupa los puntos en clusters basándose en la distancia y el número de puntos.
 
     Parámetros:
@@ -88,7 +91,7 @@ def create_clusters(data_points, min_points, max_points, distance_threshold):
                 cluster.append(point)
             # Si el número de puntos por cluster es inferior al máximo y la distancia
             # es menor al umbral permitido
-            elif len(cluster) < max_points and euclidean_distance(cluster[-1], point) < distance_threshold:
+            elif len(cluster) <= max_points and euclidean_distance(cluster[-1], point) <= distance_threshold:
                 cluster.append(point)
             elif len(cluster) < min_points:
                 cluster.append(point)

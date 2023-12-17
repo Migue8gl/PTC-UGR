@@ -25,8 +25,11 @@ def euclidean_distance(point1, point2):
     if len(point1) != len(point2):
         raise ValueError("Los puntos deben ser de igual dimensionalidad")
 
-    # Calculate the Euclidean distance
-    distance = math.sqrt(sum((p1 - p2) ** 2 for p1, p2 in zip(point1, point2)))
+    # Calculamos distancia euclidia
+    sum = 0
+    for a1, a2 in zip(point1, point2):
+        sum += (a1 - a2) ** 2
+    distance = math.sqrt(sum)
     return distance
 
 
@@ -43,7 +46,7 @@ def perimeter(points):
     perimeter = 0
     n = len(points)
 
-    for i in range(n - 1):
+    for i in range(0, n - 1):
         perimeter += euclidean_distance(points[i], points[i + 1])
 
     return perimeter
@@ -62,7 +65,7 @@ def depth(points):
     max_distance = 0
     n = len(points)
 
-    for i in range(1, n - 1):
+    for i in range(0, n - 1):
         distance = point_to_line_distance(points[i], points[0], points[n - 1])
         max_distance = max(max_distance, distance)
 
@@ -83,25 +86,15 @@ def width(points):
 
 
 def point_to_line_distance(point, line_start, line_end):
-    """
-    Calcula la distancia entre un punto y una línea definida por dos puntos.
-
-    Parámetros:
-    - point: Punto en formato (x, y).
-    - line_start: Primer punto de la línea en formato (x, y).
-    - line_end: Segundo punto de la línea en formato (x, y).
-
-    Retorna:
-    - Distancia entre el punto y la línea.
-    """
     x, y = point
-    x1, y1 = line_start
-    x2, y2 = line_end
+    x0, y0 = line_start
+    xn, yn = line_end
 
-    numerator = abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1)
-    denominator = math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
+    a = yn - y0
+    b = x0 - xn
+    c = y0 * xn - yn * x0
 
-    return numerator / denominator
+    return abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
 
 
 def generate_dataset(output_file, files):

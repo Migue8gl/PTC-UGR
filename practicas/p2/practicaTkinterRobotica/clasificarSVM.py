@@ -12,13 +12,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score, GridSearchCV
 import pickle
-
-# import warnings filter
 from warnings import simplefilter
-# ignore all future warnings
 simplefilter(action='ignore', category=FutureWarning)
 simplefilter(action='ignore', category=DeprecationWarning)
 
@@ -26,6 +22,10 @@ simplefilter(action='ignore', category=DeprecationWarning)
 def scale_data(data):
     means = np.average(data, axis=0)
     std_deviations = np.std(data, axis=0)
+
+    with open("scaling_params.pkl", "wb") as params_file:
+        pickle.dump(
+            {'means': means, 'std_deviations': std_deviations}, params_file)
     return (data - means) / std_deviations
 
 
@@ -41,35 +41,26 @@ def split_data(data):
 
 
 def train_test_split_data(x, y):
-    return train_test_split(x, y, test_size=0.2, random_state=25)
+    return train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
 
 
-def train_classifier_hyperparameter_search(x_train, y_train, x_test, y_test, kernel, params):
-    # Busqueda de parámetros
-    svc = SVC(kernel=kernel)
-    svc.fit(x_train, y_train)
+def train_classifier(x_train, y_train, x_test, kernel, params=None):
+    if params is None:
+        svc = SVC(kernel=kernel)
+    else:
+        clf = GridSearchCV(SVC(kernel=kernel), params)
+        clf = clf.fit(x_train, y_train)
+        print("Mejor estimador encontrado")
+        print(clf.best_estimator_)
+        svc = clf.best_estimator_
 
-    # Parámetros a combinar
-    param_grid = params
-
-    clf = GridSearchCV(SVC(kernel=kernel, class_weight="balanced"), param_grid)
-    clf = clf.fit(x_train, y_train)
-    print("Mejor estimador encontrado")
-    print(clf.best_estimator_)
-
-    best_svc = clf.best_estimator_
-    return best_svc.predict(x_test), best_svc
-
-
-def train_classifier(x_train, y_train, x_test, y_test, kernel):
-    svc = SVC(kernel=kernel)
     svc.fit(x_train, y_train)
     return svc.predict(x_test), svc
 
 
 def evaluate_classifier(y_true, y_pred):
     acc_test = accuracy_score(y_true, y_pred)
-    message = f"Acc_test: (TP+TN)/(T+P)  %0.4f\n" % acc_test
+    message = "Acc_test: (TP+TN)/(T+P)  %0.4f\n" % acc_test
     message += "Matriz de confusión Filas: verdad Columnas: predicción\n"
     message += f"{confusion_matrix(y_true, y_pred)}\n"
     message += "Precision= TP / (TP + FP), Recall= TP / (TP + FN)\n"
@@ -80,10 +71,10 @@ def evaluate_classifier(y_true, y_pred):
 
 def cross_validate_classifier(clf, x, y):
     scores = cross_val_score(clf, x, y, cv=5)
-    message = f"Accuracy 5-cross validation: %0.4f (+/- %0.4f)\n" % (
+    message = "Accuracy 5-cross validation: %0.4f (+/- %0.4f)\n" % (
         scores.mean(), scores.std() * 2)
     message += '#----------------------------------------------#\n'
-    return message
+    return message, scores.mean()
 
 
 def train(dataset):
@@ -95,45 +86,38 @@ def train(dataset):
 
         for i, data in enumerate([x, x_scaled]):
             if i == 0:
-                message += '\n------ DATOS SIN ESCALAR ------\n'
+                message += '\n------------ DATOS SIN ESCALAR ------------\n\n'
             else:
-                message += '\n------ DATOS ESCALADOS ------\n'
-            x_train, x_test, y_train, y_test = train_test_split_data(data, y)
+                message += '\n------------ DATOS ESCALADOS ------------\n\n'
+            x_train, x_test, y_train, y_test = train_test_split(
+                data, y, stratify=y)
 
-            # Linear SVM
-            message += "Clasificación con kernel Lineal\n"
-            y_pred, svc = train_classifier(
-                x_train, y_train, x_test, y_test, 'linear')
-            message += evaluate_classifier(y_test, y_pred)
-            message += cross_validate_classifier(svc, data, y)
+            kernels = ['linear', 'poly', 'rbf']
+            params = {
+                'rbf': {'C': [0.1, 1, 10, 100, 1000], 'gamma': [0.001, 0.005, 0.01, 0.1]},
+                'linear': {'C': [0.1, 1, 10, 100, 1000]},
+                'poly': {'C': [0.1, 1, 10], 'degree': [2, 3]}
+            }
+            
+            best_score = 0
 
-            # Polinomico SVM
-            message += "Clasificación con kernel Polinómico\n"
-            y_pred, svc = train_classifier(
-                x_train, y_train, x_test, y_test, 'poly')
-            message += evaluate_classifier(y_test, y_pred)
-            message += cross_validate_classifier(svc, data, y)
+            for kernel in kernels:
+                message += f"Clasificación con kernel {kernel}\n"
 
-            # Radial SVM
-            message += "Clasificación con kernel RBF\n"
-            y_pred, svc = train_classifier(
-                x_train, y_train, x_test, y_test, 'rbf')
-            message += evaluate_classifier(y_test, y_pred)
-            message += cross_validate_classifier(svc, data, y)
+                y_pred, svc = train_classifier(
+                    x_train, y_train, x_test, kernel, params[kernel])
+                message += evaluate_classifier(y_test, y_pred)
+                msg, score = cross_validate_classifier(svc, data, y)
+                message += msg
+                
+                # Guardamos el mejor clasificador
+                if score > best_score:
+                    best_score = score
+                    best_svc = svc
+                    last_msg = '\nMEJOR CLASIFICADOR: {}'.format(kernel)
 
-            # El mejor kernel es el de RBF, por lo que hacemos búsqueda de hiperparámetros
-            # para ese kernel
-            params = {'C': [1, 10, 100, 1000],
-                      'gamma': [0.001, 0.005, 0.01, 0.1]}
-
-            message += 'Búsqueda de hiperparámetros para SVM con RBF\n'
-            y_pred, best_svc = train_classifier_hyperparameter_search(
-                x_train, y_train, x_test, y_test, 'rbf', params)
-            message += evaluate_classifier(y_test, y_pred)
-            message += cross_validate_classifier(best_svc, data, y)
-
-        # Guardamos el último clasificador (que es el SVM-RBF con búsqueda
-        # de hiperparámetros)
+        # Guardamos el último clasificador
         with open("clasificador.pkl", "wb") as archivo:
             pickle.dump(best_svc, archivo)
+        message += last_msg
         file.write(message)

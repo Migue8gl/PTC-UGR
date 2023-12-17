@@ -69,9 +69,6 @@ def exit_vrep():
     status_text.set('Estado: No conectado a VREP')
     exit_vrep_button.config(state=tk.DISABLED)
     capture_button.config(state=tk.DISABLED)
-    group_button.config(state=tk.DISABLED)
-    extract_features_button.config(state=tk.DISABLED)
-    train_classifier_button.config(state=tk.DISABLED)
     predict_button.config(state=tk.DISABLED)
 
 
@@ -132,7 +129,7 @@ def capture():
             elif 'cilindroMenor' in selected_file:
                 capture_parameters['entity'] = 'Cylinder2'
             else:
-                capture_parameters['entity'] = 'Cylinder0'
+                capture_parameters['entity'] = 'Cylinder5'
 
             capturar.capture(**capture_parameters)
             tk.messagebox.showinfo(

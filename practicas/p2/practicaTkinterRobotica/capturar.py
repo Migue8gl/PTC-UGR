@@ -57,7 +57,6 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
     max_iter = iterations
     seconds = 0.5
     iteration = 1
-    change_direction = True
 
     cabecera = {'TiempoSleep': seconds, "MaxIteraciones": max_iter}
     data_laser = open(file, "w")
@@ -81,29 +80,23 @@ def capture(clientID, file, iterations, lower_bound, upper_bound, entity):
             clientID, robothandle, -1, vrep.simx_opmode_oneshot_wait)
 
         # Variables de movimiento
-        movement_step = 0.05
-        random_step_x = random.uniform(0, 0.05)
-        random_step_y = random.uniform(-0.2, 0.2)
-        rotation_step = 0.5
+        random_step_x = random.uniform(-0.2, 0.3)
+        random_step_y = random.uniform(-0.35, 0.35)
+        rotation_step = 0.2
 
         # Controlamos el movimiento
-        if change_direction:
-            new_x = entity_position[0] + movement_step + random_step_x
-            new_y = entity_position[1] - movement_step - random_step_y
-            new_distance_to_person = math.sqrt(new_x**2 + new_y**2)
+        new_x = entity_position[0] + random_step_x
+        new_y = entity_position[1] + random_step_y
 
-            if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
-                change_direction = False
-                new_x = lower_bound + random_step_x
+        robot_x, robot_y = robot_position[0], robot_position[1]
+        distance_to_robot = math.sqrt(
+            (new_x - robot_x) ** 2 + (new_y - robot_y) ** 2)
 
-        else:
-            new_x = entity_position[0] + movement_step + random_step_x
-            new_y = entity_position[1] + movement_step + random_step_y
-            new_distance_to_person = math.sqrt(new_x**2 + new_y**2)
+        print(distance_to_robot)
 
-            if lower_bound >= new_distance_to_person or new_distance_to_person >= upper_bound:
-                change_direction = True
-                new_x = lower_bound + random_step_x
+        if lower_bound >= distance_to_robot or distance_to_robot >= upper_bound or new_x < lower_bound:
+            new_x = lower_bound + 0.5
+            new_y = random.uniform(-0.4, 0.4)
 
         # Cambiamos posición y rotamos al objeto/persona
         vrep.simxSetObjectPosition(
