@@ -65,8 +65,10 @@ def depth(points):
     max_distance = 0
     n = len(points)
 
-    for i in range(0, n - 1):
-        distance = point_to_line_distance(points[i], points[0], points[n - 1])
+    for i in range(1, n - 2):
+        distance = point_to_line_distance(points[i], points[0], points[-1])
+        if distance < 0:
+            print(distance)
         max_distance = max(max_distance, distance)
 
     return max_distance

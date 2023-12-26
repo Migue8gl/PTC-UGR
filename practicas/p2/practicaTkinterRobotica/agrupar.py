@@ -93,11 +93,11 @@ def create_clusters(data_points, min_points, max_points, distance_threshold):
             # es menor al umbral permitido
             elif len(cluster) <= max_points and euclidean_distance(cluster[-1], point) <= distance_threshold:
                 cluster.append(point)
-            elif len(cluster) < min_points:
+            elif len(cluster) <= min_points:
                 cluster.append(point)
             else:
                 clusters.append(cluster)
-                cluster = []
+                cluster = [point]
     return clusters
 
 def visualize_clusters(clusters, plot_name='clusters'):

@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Dec 14 19:07:13 2023
-
-@author: migue8gl
-"""
-
 import time
 import vrep
 import pickle
@@ -16,7 +8,16 @@ import matplotlib.pyplot as plt
 
 
 def read_laser_data(clientID):
-    # Acceder a los datos del laser
+    """
+    Lee los datos del láser desde V-REP.
+
+    Parámetros:
+    - clientID: Identificador de cliente para la conexión con V-REP.
+
+    Devuelve:
+    - Lista de listas que contiene las coordenadas (x, y) de los puntos detectados por el láser.
+    """
+    # Acceder a los datos del láser
     _, datosLaserComp = vrep.simxGetStringSignal(
         clientID, 'LaserData', vrep.simx_opmode_streaming)
 
@@ -24,7 +25,7 @@ def read_laser_data(clientID):
     time.sleep(1)
     seconds = 0.5
 
-    # Listas para recibir las coordenadas (x y z) de los puntos detectados por el laser
+    # Listas para recibir las coordenadas (x y z) de los puntos detectados por el láser
     puntos_x = []
     puntos_y = []
     puntos_z = []
@@ -44,6 +45,15 @@ def read_laser_data(clientID):
 
 
 def generate_features(clusters):
+    """
+    Genera características (features) a partir de los clusters.
+
+    Parámetros:
+    - clusters: Lista de clusters.
+
+    Devuelve:
+    - Lista de listas con características para cada cluster.
+    """
     features = []
     for cluster in clusters:
         features_cluster = [perimeter(cluster), depth(cluster), width(cluster)]
@@ -52,6 +62,15 @@ def generate_features(clusters):
 
 
 def predict_data(data):
+    """
+    Realiza predicciones utilizando un clasificador previamente entrenado.
+
+    Parámetros:
+    - data: Datos a predecir.
+
+    Devuelve:
+    - Predicciones.
+    """
     # Pasamos a DataFrame
     feature_names = ['perimeter', 'depth', 'width']
     df = pd.DataFrame(data, columns=feature_names)
@@ -70,26 +89,43 @@ def predict_data(data):
     return predictions
 
 
-def visualize_clusters(clusters, predictions, plot_name='Predictions'):
+def visualize_clusters(clusters, predictions, plot_name='prediccion/Predictions'):
+    """
+    Visualiza los clusters y sus predicciones.
+
+    Parámetros:
+    - clusters: Lista de clusters.
+    - predictions: Predicciones asociadas a cada cluster.
+    - plot_name: Nombre del archivo de la visualización (opcional).
+    """
     plt.figure(figsize=(7, 5))
     for i, cluster in enumerate(clusters):
         color = 'red' if predictions[i] == 1 else 'blue'
         cluster_x, cluster_y = zip(*cluster)
         plt.scatter(cluster_x, cluster_y, c=color, s=10)
 
-    plt.xlabel('X-axis')
-    plt.ylabel('Y-axis')
-    plt.title('Cluster Visualization')
+    plt.xlabel('Eje X')
+    plt.ylabel('Eje Y')
+    plt.title('Visualización de Clusters')
     plt.savefig(plot_name)
 
 
 def predict(clientID, parameters):
+    """
+    Realiza la predicción de clusters utilizando datos del láser y visualiza los resultados.
+
+    Parámetros:
+    - clientID: Identificador de cliente para la conexión con V-REP.
+    - parameters: Parámetros de agrupamiento.
+
+    No devuelve nada, pero guarda una visualización de los clusters con las predicciones.
+    """
     # Leemos los datos del láser
     data = read_laser_data(clientID)
 
     # Creamos los clusters
-    clusters = create_clusters(data, parameters.get_min_points(
-    ), parameters.get_max_points(), parameters.get_distance_threshold())
+    clusters = create_clusters(data, parameters.get_min_points(),
+                               parameters.get_max_points(), parameters.get_distance_threshold())
 
     # Obtenemos características por cada cluster
     data = generate_features(clusters)
